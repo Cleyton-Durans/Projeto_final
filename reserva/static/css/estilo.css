@@ -1,3 +1,12 @@
+     /* Corpo da página ocupando toda a largura */
+    body {
+        padding: 0%;
+        margin: 0;
+        padding: 0;
+    }
+
+/*CSS MENU DE NAVEGAÇÃO ---------------------------------------------------------------*/
+
  .navbar {
         position: fixed;
         top: 0;
@@ -7,22 +16,18 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-     Espaço para o conteúdo não ficar atrás da navbar 
+     /* Espaço para o conteúdo não ficar atrás da navbar  */
+     
     .espaco-navbar {
         padding-top: 80px; /* altura aproximada da navbar */
     }
 
-     Corpo da página ocupando toda a largura */
-    body {
-        padding: 0%;
-        margin: 0;
-        padding: 0;
-    }
 .navbar {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(5px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease-in-out;
+  --bs-tertiary-bg-rgb: 249, 243, 233; /* tom creme */
 }
 
 /* Marca (logo) */
@@ -82,7 +87,7 @@
   transform: scale(1.02);
 }
 
-/* ESTILO PARA CARROCEL */
+/* ESTILO PARA CARROCEL ---------------------------------------------------- */
 
 #home #carouselExampleIndicators {
     height: 100vh;
@@ -134,4 +139,18 @@
 .custom-card img {
   object-fit: cover;
   height: 225px;
+}
+
+/* CSS INSTAGRAM UTILIZANDO SNAPWIDGHT -------------------------------------------------*/
+
+#avaliacao p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  
+}
+
+.descricao {
+  text-align: center;
+  height: 15px;
 }
