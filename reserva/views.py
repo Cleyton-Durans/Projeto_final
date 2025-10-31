@@ -69,7 +69,7 @@ def atualizar_reserva(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Reserva atualizada!')
-            return redirect('lista_reservas')
+            return redirect('lista_reserva')
     else:
         form = ReservaForm(instance=reserva)
     return render(request, 'editar_reserva.html', {'form': form})
@@ -80,11 +80,29 @@ def alterar_status(request, id, novo_status):
     reserva.status = novo_status
     reserva.save()
     messages.success(request, f"Status da reserva de {reserva.nome} alterado para {novo_status}.")
-    return redirect('lista_reservas')
+    return redirect('lista_reserva')
 
 @staff_member_required
 def deletar_reserva(request, id):
     reserva = get_object_or_404(Reserva, id=id)
     reserva.delete()
     messages.success(request, 'Reserva removida.')
-    return redirect('lista_reservas')
+    return redirect('lista_reserva')
+
+# ------------------------
+# Páginas do painel (só staff)
+# ------------------------
+@staff_member_required
+def fazer_reserva_admin(request):
+    if request.method == 'POST':
+        form = ReservaForm(request.POST)
+        if form.is_valid():
+            reserva = form.save(commit=False)
+            reserva.status = 'Confirmada'  # já confirma no momento do cadastro
+            reserva.save()
+            messages.success(request, f"Reserva de {reserva.nome} cadastrada com sucesso!")
+            return redirect('lista_reserva')
+    else:
+        form = ReservaForm()
+
+    return render(request, 'fazer_reserva_admin.html', {'form': form})

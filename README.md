@@ -1,107 +1,93 @@
+# 🍽️ Restaurante Sky Lounge
+
+Um sistema completo de **gerenciamento de reservas para restaurante**, desenvolvido com **Django**, **HTML5**, **CSS**, **JavaScript** e o pacote **Django Widget Tweaks**.  
+O objetivo do projeto é permitir que clientes realizem reservas online e que o administrador do restaurante gerencie as reservas através de um painel administrativo seguro e intuitivo.
+
+---
+
+## 🚀 Funcionalidades
+
+### 👥 Público (Clientes)
+- Fazer reserva online de forma simples.
+- Consultar o status das reservas enviando nome e e-mail.
+- Interface responsiva e moderna.
+
+### 🧑‍💼 Administrador (Staff)
+- Login protegido (acesso exclusivo para staff).
+- Listagem de todas as reservas.
+- Atualização de status: **Confirmada**, **Pendente**, **Cancelada**.
+- Edição e exclusão de reservas diretamente no painel.
+- Visualização das reservas futuras de forma organizada.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+| Camada | Tecnologia |
+|--------|-------------|
+| Backend | 🐍 Django (Python 3.x) |
+| Frontend | 🌐 HTML5, CSS3, JavaScript |
+| Estilização | 🎨 Bootstrap 5 |
+| Template Engine | 🧩 Django Templates |
+| Extensões | ⚙️ Django Widget Tweaks |
+| Banco de Dados | 💾 SQLite (padrão) |
+
+---
+
+## 📁 Estrutura de Pastas
+
+projeto_restaurante/
+│
+├── app/
+│ ├── migrations/
+│ ├── static/
+│ │ ├── css/
+│ │ ├── js/
+│ │ └── img/
+│ ├── templates/
+│ │ └── app/
+│ │ ├── base.html
+│ │ ├── login.html
+│ │ ├── lista_reserva.html
+│ │ ├── fazer_reserva.html
+│ │ ├── minhas_reservas.html
+│ │ └── editar_reserva.html
+│ ├── forms.py
+│ ├── models.py
+│ ├── urls.py
+│ └── views.py
+│
+├── projeto_restaurante/
+│ ├── settings.py
+│ ├── urls.py
+│ ├── wsgi.py
+│ └── asgi.py
+│
+├── manage.py
+└── README.md
+
 # Projeto_restaurante
-Projeto Final utilizando o fremwork CRUD! 
+Projeto Final utilizando o fremwork CRUD!   
 
-# PYTHON_SENAC_CENTROPOLITECNICO
-CRIAÇÃO DO PROJETO FINAL.
-CRUD - LISTA DE RESERVA PARA O RESTAURANTE
+---
 
-CLIENTE - NOME, TELEFONE, EMAIL, E QUNTIDADE DE PESSOA 
-CLINETE -> CADASTRO HTML
-ADMIN - INDEX UPDATE
 
-OPCIONAL CADASTRO 
+--- 
 
-Aqui está um passo a passo básico para criar um cadastro de cliente para reserva de restaurante em Django:
 
-1. Criar o app
-python manage.py startapp reservas
+👨‍💻 Autor
 
-2. Definir o modelo do cliente e reserva
-from django.db import models
+Cleyton Durans
+📧 cleytondurans.n@gmail.com
 
-class Cliente(models.Model):
-    nome = models.CharField(max_length=100)
-    email = models.EmailField()
-    telefone = models.CharField(max_length=20)
+💼 Projeto desenvolvido para estudos e prática com Django e Front-End moderno.
 
-class Reserva(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    data = models.DateTimeField()
-    quantidade_pessoas = models.PositiveIntegerField()
 
-3. Registrar os modelos no admin
-from django.contrib import admin
-from .models import Cliente, Reserva
+## ⚙️ Instalação e Configuração
 
-admin.site.register(Cliente)
-admin.site.register(Reserva)
+### 1️⃣ Clonar o repositório
 
-4. Migrar o banco de dados
-python manage.py makemigrations reservas
-python manage.py migrate
 
-5. Criar um formulário para cadastro
-from django import forms
-from .models import Cliente, Reserva
 
-class ClienteForm(forms.ModelForm):
-    class Meta:
-        model = Cliente
-        fields = ['nome', 'email', 'telefone']
-
-class ReservaForm(forms.ModelForm):
-    class Meta:
-        model = Reserva
-        fields = ['cliente', 'data', 'quantidade_pessoas']
-
-6. Criar views para cadastro
-from django.shortcuts import render, redirect
-from .forms import ClienteForm, ReservaForm
-
-def cadastrar_cliente(request):
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_clientes')
-    else:
-        form = ClienteForm()
-    return render(request, 'reservas/cadastrar_cliente.html', {'form': form})
-
-def cadastrar_reserva(request):
-    if request.method == 'POST':
-        form = ReservaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_reservas')
-    else:
-        form = ReservaForm()
-    return render(request, 'reservas/cadastrar_reserva.html', {'form': form})
-
-7. Criar templates HTML simples
-Crie os arquivos cadastrar_cliente.html e cadastrar_reserva.html na pasta reservas/templates/reservas/.
-
-8. Configurar URLs
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('cliente/cadastrar/', views.cadastrar_cliente, name='cadastrar_cliente'),
-    path('reserva/cadastrar/', views.cadastrar_reserva, name='cadastrar_reserva'),
-]
-
-Inclua reservas.urls no seu urls.py principal.
-
-CONHECIMENTOS BÁSICOS DE CRUD
-API_ROOT                                    API_REST
-Settings.py     | Configurações gerais      models.py   | Cria modelos para o banco de dados
-urls.py         | Link de aplicações        admin.py    | Configura edição de modelo (opcionnal)
-                                            views.py    | Funções de API
-                                            urls.py     | Linkar funções
-
-TIPOS DE MÉTODOS REQUISIÇÃO ( request ) para a API
-GET     | Retornar um ou mais registro específico (RECUPERAR DADOS)
-POST    | Criar um novo registro (INSERIR DADOS)
-PUT     | Atualizar tudo de um registro
-PACH    | Atualizar alguns campos de um registro 
-
+git clone https://github.com/seuusuario/projeto-restaurante.git
+cd projeto-restaurante
