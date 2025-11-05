@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries':{   
+                'staticfiles': 'django.templatetags.static',
                 'static': 'django.templatetags.static',
                 'media': 'django.templatetags.media',
             }
