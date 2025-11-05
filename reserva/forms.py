@@ -21,3 +21,5 @@ class ReservaForm(forms.ModelForm):
             'hora': 'Hora da Reserva',
             'quantidade_pessoas': 'Número de Pessoas',
         }
+
+

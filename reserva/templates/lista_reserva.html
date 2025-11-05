@@ -139,14 +139,14 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">Restaurante Sky Lounge</div>
-    <a href="{% url 'lista_reserva' %}" class="{% if request.path == '/reservas/' %}active{% endif %}">
+    <a href="{% url 'lista_reservas' %}" class="{% if request.path == '/reservas/' %}active{% endif %}">
       <i class="fas fa-list"></i> Lista de Reservas
     </a>
     <a href="{% url 'fazer_reserva_admin' %}" class="{% if request.path == '/' %}active{% endif %}">
       <i class="fas fa-plus-circle"></i> Cadastrar Reserva
     </a>
-    <a href="#"><i class="fas fa-chair"></i> Locação de Mesas</a>
-    <a href="{% url 'login' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <a href="{% url 'locacao_mesas' %}"><i class="fas fa-chair"></i> Locação de Mesas</a>
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
   <!-- Conteúdo principal -->

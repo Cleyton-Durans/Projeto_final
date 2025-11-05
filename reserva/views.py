@@ -4,7 +4,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.utils import timezone
-from .models import Reserva
+from django.contrib.auth.models import User
+from .models import Reserva, Mesa
 from .forms import ReservaForm
 
 # ------------------------
@@ -69,7 +70,7 @@ def atualizar_reserva(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Reserva atualizada!')
-            return redirect('lista_reserva')
+            return redirect('lista_reservas')
     else:
         form = ReservaForm(instance=reserva)
     return render(request, 'editar_reserva.html', {'form': form})
@@ -80,14 +81,14 @@ def alterar_status(request, id, novo_status):
     reserva.status = novo_status
     reserva.save()
     messages.success(request, f"Status da reserva de {reserva.nome} alterado para {novo_status}.")
-    return redirect('lista_reserva')
+    return redirect('lista_reservas')
 
 @staff_member_required
 def deletar_reserva(request, id):
     reserva = get_object_or_404(Reserva, id=id)
     reserva.delete()
     messages.success(request, 'Reserva removida.')
-    return redirect('lista_reserva')
+    return redirect('lista_reservas')
 
 # ------------------------
 # Páginas do painel (só staff)
@@ -101,8 +102,57 @@ def fazer_reserva_admin(request):
             reserva.status = 'Confirmada'  # já confirma no momento do cadastro
             reserva.save()
             messages.success(request, f"Reserva de {reserva.nome} cadastrada com sucesso!")
-            return redirect('lista_reserva')
+            return redirect('lista_reservas')
     else:
         form = ReservaForm()
 
     return render(request, 'fazer_reserva_admin.html', {'form': form})
+
+# ------------------------
+# Locação de Mesas
+# ------------------------
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
+from django.contrib import messages
+from .models import Mesa, Reserva
+
+
+@staff_member_required
+def lista_mesas(request):
+    hoje = timezone.localdate()  # data atual
+    mesas = Mesa.objects.all()
+
+    # reservas confirmadas do dia atual
+    reservas = Reserva.objects.filter(
+        data=hoje,
+        status='Confirmada'
+    ).order_by('hora')
+
+    return render(request, "locacao_mesas.html", {"mesas": mesas, "reservas": reservas, "now": timezone.now()})
+
+
+@staff_member_required
+def alterar_status_mesa(request, id):
+    mesa = get_object_or_404(Mesa, id=id)
+
+    if request.method == 'POST':
+        reserva_id = request.POST.get('reserva')
+
+        # se uma reserva for selecionada → ocupar mesa
+        if reserva_id:
+            reserva = get_object_or_404(Reserva, id=reserva_id)
+            mesa.reserva = reserva
+            mesa.status = 'Ocupada'
+            messages.success(request, f"Mesa {mesa.numero} ocupada por {reserva.nome}.")
+        else:
+            # se não houver reserva → liberar mesa
+            mesa.reserva = None
+            mesa.status = 'Disponível'
+            messages.info(request, f"Mesa {mesa.numero} foi liberada.")
+
+        mesa.save()
+
+    return redirect('locacao_mesas')

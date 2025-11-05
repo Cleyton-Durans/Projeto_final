@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Mesa(models.Model):
+    STATUS_CHOICES = [
+        ('Disponível', 'Disponível'),
+        ('Ocupada', 'Ocupada'),
+    ]
+    numero = models.PositiveIntegerField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Disponível')
+    criado_em = models.DateTimeField(auto_now_add=True)
+
 class Reserva(models.Model):
     STATUS_CHOICES = [
         ('Em espera', 'Em espera'),
@@ -14,6 +23,7 @@ class Reserva(models.Model):
     data = models.DateField()
     hora = models.TimeField()
     quantidade_pessoas = models.PositiveIntegerField()
+    mesa = models.ForeignKey(Mesa, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Em espera')
     criado_em = models.DateTimeField(auto_now_add=True)
 
