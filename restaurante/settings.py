@@ -131,6 +131,7 @@ DATE_INPUT_FORMATS = ['%d/%m/%Y']
 STATICFILES_DIRS = [
     BASE_DIR / 'static' 
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 LOGIN_REDIRECT_URL = '/reservas/'  # ou qualquer URL que queira
 LOGOUT_REDIRECT_URL = '/'  # ou qualquer URL que queira
