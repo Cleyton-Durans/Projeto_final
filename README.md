@@ -89,5 +89,5 @@ Cleyton Durans
 
 
 
-git clone https://github.com/seuusuario/projeto-restaurante.git
+git clone (https://github.com/Cleyton-Durans/Projeto_final.git)
 cd projeto-restaurante
