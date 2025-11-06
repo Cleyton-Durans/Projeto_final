@@ -116,15 +116,7 @@ def fazer_reserva_admin(request):
 
 # ------------------------
 # Locação de Mesas
-# ------------------------
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.admin.views.decorators import staff_member_required
-from django.utils import timezone
-from django.contrib import messages
-from .models import Mesa, Reserva
-
+# ------------------------  
 
 @staff_member_required
 def lista_mesas(request):

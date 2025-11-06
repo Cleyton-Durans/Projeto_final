@@ -234,6 +234,7 @@
                     <tr>
                         <th>Número da Mesa</th>
                         <th>Status</th>
+                        <th>Cliente</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -248,6 +249,15 @@
                             <span class="badge bg-danger">{{ mesa.status }}</span>
                             {% endif %}
                         </td>
+                        <!-- NOVA COLUNA CLIENTE -->
+                        <td>
+                            {% if mesa.reserva %}
+                                {{ mesa.reserva.nome }}
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+
                         <td>
                             <form method="POST" action="{% url 'alterar_status_mesa' mesa.id %}">
                                 {% csrf_token %}
