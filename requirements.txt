@@ -1,5 +1,5 @@
 #Coloque os frameworks necessários para o projeto
 Django>=5.0
 django-widget-tweaks>=1.5
-whitenoise
-gunicorn
+whitenoise>=6.11.0
+gunicorn>=21.2.0
