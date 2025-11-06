@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← adicione aqui
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -132,3 +133,9 @@ LOGOUT_REDIRECT_URL = '/'
 # CHAVE PRIMÁRIA PADRÃO
 # ============================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ============================
+# ARQUIVOS ESTÁTICOS
+# ============================
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
