@@ -1,0 +1,36 @@
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- DJANGO ---
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+local_settings.py
+
+# --- ENVIRONMENT ---
+venv/
+.env
+.env.bak
+.env.*
+
+# --- VSCODE / EDITOR ---
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# --- SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- BUILD / DIST ---
+build/
+dist/
+*.egg-info/
+.eggs/

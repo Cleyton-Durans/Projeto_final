@@ -70,8 +70,10 @@ projeto_restaurante/
 Projeto Final utilizando o fremwork CRUD!   
 
 ---
-
-
+📂 App principal: reserva
+📦 Models: Mesa e Reserva
+🔑 Login staff: admin
+💾 Banco: db.sqlite3
 --- 
 
 

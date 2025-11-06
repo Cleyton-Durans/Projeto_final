@@ -59,9 +59,15 @@ def logout_view(request):
 # ------------------------
 @staff_member_required
 def lista_reservas(request):        
-    reservas = Reserva.objects.filter(data__gte=timezone.now().date()).order_by('data', 'hora') # data__gte garante que só aparecem datas futuras ou de hoje
-    return render(request, 'lista_reserva.html', {'reservas': reservas})    
-
+    hoje = timezone.now().date()
+    reservas_futuras = Reserva.objects.filter(data__gte=hoje).order_by('data', 'hora')
+    reservas_passadas = Reserva.objects.filter(data__lt=hoje).order_by('-data', 'hora')
+    
+    return render(request, 'lista_reserva.html', {
+        'reservas_futuras': reservas_futuras,
+        'reservas_passadas': reservas_passadas
+    })
+    
 @staff_member_required
 def atualizar_reserva(request, id):
     reserva = get_object_or_404(Reserva, id=id)
