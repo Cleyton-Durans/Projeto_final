@@ -6,77 +6,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Fazer Reserva - Recepção</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <meta author="Cleyton Durans"/>
     
-  <!-- <head> animation -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
 
-  <!-- Font Awesome CSS para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- fontes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
-
-  <!-- Scripts -->
-  <!-- Bootstrap Bundle JS (inclui o JavaScript necessário) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <link rel="stylesheet" href="{% static 'js/javascripts.js' %}">
-  <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'js/javascripts.js' %}">
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
 </head>
+
 <body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <h2 class="text-center mb-4 text-primary">Cadastro de Reserva (Recepção)</h2>
 
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h2 class="text-center mb-4 text-primary">Cadastro de Reserva (Recepção)</h2>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="id_nome" class="form-label">Nome</label>
+                        {{ form.nome|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="id_email" class="form-label">Email</label>
+                        {{ form.email|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="id_telefone" class="form-label">Telefone</label>
+                        {{ form.telefone|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="id_data" class="form-label">Data</label>
+                        {{ form.data|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="id_hora" class="form-label">Hora</label>
+                        {{ form.hora|add_class:"form-control" }}
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <label for="id_quantidade_pessoas" class="form-label">Pessoas</label>
+                        {{ form.quantidade_pessoas|add_class:"form-control" }}
+                    </div>
+                </div>
 
-        <form method="post">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="id_nome" class="form-label">Nome</label>
-                    {{ form.nome|add_class:"form-control" }}
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4">Cadastrar Reserva</button>
+                    <a href="{% url 'lista_reservas' %}" class="btn btn-secondary px-4">Voltar</a>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="id_email" class="form-label">Email</label>
-                    {{ form.email|add_class:"form-control" }}
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="id_telefone" class="form-label">Telefone</label>
-                    {{ form.telefone|add_class:"form-control" }}
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="id_data" class="form-label">Data</label>
-                    {{ form.data|add_class:"form-control" }}
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="id_hora" class="form-label">Hora</label>
-                    {{ form.hora|add_class:"form-control" }}
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="id_quantidade_pessoas" class="form-label">Pessoas</label>
-                    {{ form.quantidade_pessoas|add_class:"form-control" }}
-                </div>
-            </div>
-
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-success px-4">Cadastrar Reserva</button>
-                <a href="{% url 'lista_reservas' %}" class="btn btn-secondary px-4">Voltar</a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-
 </body>
-</html>
+</html> 

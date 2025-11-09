@@ -1,14 +1,18 @@
 {% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Gerenciamento de Mesas - Restaurante</title>
-  
+    <title>Gerenciamento de Mesas - Restaurante Sky Lounge</title>
+    <meta author="Cleyton Durans"/>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -16,321 +20,830 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}" />
-    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
-    <link rel="stylesheet" href="{% static 'js/javascripts.js' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}" />    
 
-    <!-- Estilos inline específicos -->
     <style>
-    body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #f8f9fa;
-    }
-
-        /* Navbar */
-        .navbar {
-            background-color: #212529;
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
         }
 
-        .navbar-brand {
-            color: #fff !important;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* Cabeçalho */
-        h2 {
-            font-weight: 600;
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f7fb;
             color: #333;
         }
 
-        /* Tabela */
-        .table th {
-            background-color: #343a40;
+        /* Sidebar Moderna */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 58px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            padding-top: 1.5rem;
+            transition: width 0.3s ease;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .sidebar:hover {
+            width: 240px;
+        }
+        
+        .sidebar a {  
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: .85rem 1.5rem;
             color: #fff;
+            text-decoration: none;
+            transition: var(--transition);
+            border-radius: 0;
+            margin: 0.25rem 0.5rem;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+        
+        .sidebar a:hover { 
+            background-color: rgba(255, 255, 255, 0.15); 
+            transform: translateX(5px);
+        }
+        
+        .sidebar .active { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            position: relative;
+        }
+        
+        .sidebar .active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: white;
+            border-radius: 0 4px 4px 0;
         }
 
-        .table-hover tbody tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
+        .sidebar-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
         }
 
-        /* Badge para status */
-        .badge {
-            transition: all 0.4s ease;
-            font-size: 0.9em;
+        .sidebar-header i {
+            font-size: 1.5rem;
         }
 
-        .badge.bg-success {
-            background-color: #28a745 !important;
+        .content {
+            flex: 1;
+            margin-left: 80px;
+            padding: 2rem;  
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar:hover ~ .content { 
+            margin-left: 240px; 
         }
 
-        .badge.bg-danger {
-            background-color: #dc3545 !important;
+        /* Header da Página */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title i {
+            color: var(--primary);
+        }
+
+        .current-date {
+            font-size: 1rem;
+            color: var(--gray);
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Cards de Mesa */
+        .mesas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .mesa-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .mesa-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .mesa-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mesa-numero {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mesa-status {
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .status-disponivel {
+            background-color: rgba(6, 214, 160, 0.15);
+            color: var(--success);
+        }
+
+        .status-ocupada {
+            background-color: rgba(239, 71, 111, 0.15);
+            color: var(--danger);
+        }
+
+        .mesa-body {
+            padding: 1.25rem;
+        }
+
+        .mesa-cliente {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .cliente-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .cliente-info h5 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cliente-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .mesa-form {
+            margin-top: 1rem;
+        }
+
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(58, 134, 255, 0.25);
+        }
+
+        .btn-mesa {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 0.75rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-alocar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-alocar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            color: white;
+        }
+
+        .btn-liberar {
+            background-color: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 71, 111, 0.2);
+        }
+
+        .btn-liberar:hover {
+            background-color: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
+        }
+
+        /* Alertas */
+        .alert-custom {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        /* Botão de Reserva */
+        .btn-reserva {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(58, 134, 255, 0.3);
+            text-decoration: none;
+        }
+
+        .btn-reserva:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(58, 134, 255, 0.4);
+            color: white;
         }
 
         /* Footer */
-        .footer {
-            margin-top: 50px;
-            text-align: center;
-            color: #888;
-            font-size: 0.9em;
-            border-top: 1px solid #dee2e6;
-            padding: 15px 0;
+        footer {
+            background-color: var(--dark);
+            color: #fff;
+            padding: 1.5rem 0;
+            margin-top: auto;
         }
 
-        /* Sidebar */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -205px; 
-      height: 100vh;
-      width: 220px;
-      background-color: #343a40;
-      padding-top: 1rem;
-      transition: left 0.3s ease;
-      z-index: 1000;
-      color: #fff;
-      overflow: hidden;
-    }
+        .social-icons a {
+            color: white;
+            font-size: 1.25rem;
+            margin: 0 0.5rem;
+            transition: var(--transition);
+        }
 
-    .sidebar:hover {
-      left: 0;
-    } 
+        .social-icons a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
 
-    .sidebar .sidebar-header {
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .sidebar a {
-      color: #fff;
-      text-decoration: none;
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 5px;
-      margin: 0.25rem 0;
-      transition: background 0.3s;
-    }
-
-    .sidebar a:hover {
-      background-color: #495057;
-    }
-
-    .sidebar a i {
-      min-width: 20px;
-      text-align: center;
-    }
-
-    .sidebar .active {
-      background-color: #28a745;
-    }   
-    .content {
-      margin-left: 0;
-      padding: 2rem;
-      flex: 1;
-      transition: margin-left 0.3s ease;
-    }
-
-    /* Conteúdo principal */
-.content-wrapper {
-    margin-left: 0;          /* começa encostado à esquerda */
-    padding: 2rem;
-    transition: margin-left 0.3s ease; /* animação suave */
-    flex: 1;
-}
-
-/* Quando a sidebar for hover, move o content-wrapper */
-.sidebar:hover + .content-wrapper {
-    margin-left: 220px;      /* mesma largura da sidebar */
-}
-
-        /* Para telas menores, a sidebar fica menor ou oculta se desejar */
+        /* Responsividade */
         @media (max-width: 768px) {
             .sidebar {
-                width: 200px;
-                top: 56px;
-                height: calc(100vh - 56px);
+                width: 60px;
+            }
+            
+            .sidebar:hover {
+                width: 220px;
+            }
+            
+            .content {
+                margin-left: 60px;
+                padding: 1.5rem 1rem;
+            }
+            
+            .sidebar:hover ~ .content {
+                margin-left: 220px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .mesas-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Conteúdo principal com margem à esquerda da sidebar */
-        .content-wrapper {
-            margin-left: 20px;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-        }
-
-        @media (max-width: 992px) {
-            /* Para telas menores, a sidebar fica acima do conteúdo ou escondida */
+        @media (max-width: 576px) {
             .sidebar {
-                position: static;
-                width: 100%;
-                height: auto;
+                display: none;
             }
-            .content-wrapper {
+            
+            .content {
                 margin-left: 0;
-                padding: 15px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1100;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             }
         }
 
-        
-    footer {
-      background-color: #343a40;
-      color: #fff;
-      padding: 1.5rem 0;
-      margin-top: auto;
-    }
+        /* Estatísticas */
+        .stats-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .stat-disponivel .stat-value {
+            color: var(--success);
+        }
+
+        .stat-ocupada .stat-value {
+            color: var(--danger);
+        }
+
+        .stat-total .stat-value {
+            color: var(--primary);
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Mobile Menu Button (aparece apenas em telas pequenas) -->
+    <button class="mobile-menu-btn d-lg-none">
+        <i class="fas fa-bars"></i>
+    </button>
+
     <!-- Sidebar -->
-    <div class="sidebar d-none d-lg-block">
-        <div class="sidebar-header text-center text-white mb-4" style="font-size: 1.5rem; font-weight: bold;">
-            Restaurante Sky Lounge
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-utensils"></i>
+            <span>Sky Lounge</span>
         </div>
-        <a href="{% url 'lista_reservas' %}" class="{% if request.path == '/reservas/' %}active{% endif %}">
-            <i class="fas fa-list"></i> Lista de Reservas
+        <a href="{% url 'lista_reservas' %}">
+            <i class="fas fa-list"></i> 
+            <span>Lista de Reservas</span>
         </a>
-        <a href="{% url 'fazer_reserva_admin' %}" class="{% if request.path == '/' %}active{% endif %}">
-            <i class="fas fa-plus-circle"></i> Cadastrar Reserva
+        <a href="{% url 'fazer_reserva_admin' %}">
+            <i class="fas fa-plus-circle"></i> 
+            <span>Cadastrar Reserva</span>
         </a>
-        <a href="{% url 'locacao_mesas' %}"><i class="fas fa-chair"></i> Locação de Mesas</a>
-        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="{% url 'locacao_mesas' %}" class="active">
+            <i class="fas fa-chair"></i> 
+            <span>Locação de Mesas</span>
+        </a>
+        <a href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> 
+            <span>Logout</span>
+        </a>
     </div>
 
     <!-- Conteúdo principal -->
-    <div class="content-wrapper">
-        <!-- Título com data -->
-        <h2 class="text-center mb-4">
-            Gerenciamento de Mesas — {{ now|date:"d/m/Y" }}
-        </h2>
+    <div class="content">
+        <!-- Cabeçalho da página -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-chair"></i> Gerenciamento de Mesas
+            </h1>
+            <div class="current-date">
+                <i class="fas fa-calendar-alt me-2"></i>{{ now|date:"d/m/Y" }}
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-container">
+            <div class="stat-card stat-total">
+                <div class="stat-value">{{ mesas.count }}</div>
+                <div class="stat-label">Total de Mesas</div>
+            </div>
+            <div class="stat-card stat-disponivel">
+                <div class="stat-value">
+                    {% with mesas_disponiveis=mesas|length %}
+                    {{ mesas_disponiveis }}
+                    {% endwith %}
+                </div>
+                <div class="stat-label">Mesas Disponíveis</div>
+            </div>
+            <div class="stat-card stat-ocupada">
+                <div class="stat-value">
+                    {% with mesas_ocupadas=mesas|length %}
+                    {{ mesas_ocupadas }}
+                    {% endwith %}
+                </div>
+                <div class="stat-label">Mesas Ocupadas</div>
+            </div>
+        </div>
 
         <!-- Mensagens -->
         {% if messages %}
-        <div class="alert alert-info">
+        <div class="alert alert-info alert-custom">
             {% for message in messages %}
-            {{ message }}
+            <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle me-2"></i>
+                <span>{{ message }}</span>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
 
-        <!-- Tabela de Mesas -->
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center align-middle shadow-sm">
-                <thead>
-                    <tr>
-                        <th>Número da Mesa</th>
-                        <th>Status</th>
-                        <th>Cliente</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for mesa in mesas %}
-                    <tr>
-                        <td><strong>{{ mesa.numero }}</strong></td>
-                        <td>
-                            {% if mesa.status == 'Disponível' %}
-                            <span class="badge bg-success">{{ mesa.status }}</span>
-                            {% else %}
-                            <span class="badge bg-danger">{{ mesa.status }}</span>
-                            {% endif %}
-                        </td>
-                        <!-- NOVA COLUNA CLIENTE -->
-                        <td>
+        <!-- Grid de Mesas -->
+        <div class="mesas-grid">
+            {% for mesa in mesas %}
+            <div class="mesa-card">
+                <div class="mesa-header">
+                    <div class="mesa-numero">
+                        <i class="fas fa-table"></i>
+                        Mesa {{ mesa.numero }}
+                    </div>
+                    <div class="mesa-status {% if mesa.status == 'Disponível' %}status-disponivel{% else %}status-ocupada{% endif %}">
+                        {{ mesa.status }}
+                    </div>
+                </div>
+                <div class="mesa-body">
+                    <div class="mesa-cliente">
+                        <div class="cliente-avatar">
                             {% if mesa.reserva %}
-                                {{ mesa.reserva.nome }}
+                                {{ mesa.reserva.nome|slice:":1"|upper }}
                             {% else %}
-                                <span class="text-muted">—</span>
+                                <i class="fas fa-user"></i>
                             {% endif %}
-                        </td>
-
-                        <td>
-                            <form method="POST" action="{% url 'alterar_status_mesa' mesa.id %}">
-                                {% csrf_token %}
-                                <div class="mb-2">
-                                    <label for="reserva_{{ mesa.id }}" class="form-label">Cliente</label>
-                                    <select name="reserva" id="reserva_{{ mesa.id }}" class="form-select">
-                                        <option value="">-- Selecione o cliente --</option>
-                                        {% for reserva in reservas %}
-                                        <option value="{{ reserva.id }}"
-                                            {% if mesa.reserva and mesa.reserva.id == reserva.id %}selected{% endif %}>
-                                            {{ reserva.nome }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <button type="submit"
-                                    class="btn {% if mesa.status == 'Disponível' %}btn-outline-primary{% else %}btn-outline-success{% endif %} btn-sm w-100 mt-2">
-                                    {% if mesa.status == 'Disponível' %}
-                                    Alocar Cliente
-                                    {% else %}
-                                    Liberar Mesa
-                                    {% endif %}
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="3">Nenhuma mesa cadastrada.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        </div>
+                        <div class="cliente-info">
+                            <h5>
+                                {% if mesa.reserva %}
+                                    {{ mesa.reserva.nome }}
+                                {% else %}
+                                    Disponível
+                                {% endif %}
+                            </h5>
+                            <p>
+                                {% if mesa.reserva %}
+                                    {{ mesa.reserva.quantidade_pessoas }} pessoa{{ mesa.reserva.quantidade_pessoas|pluralize }}
+                                    <br>
+                                    <small class="text-muted">{{ mesa.reserva.data|date:"d/m/Y" }} às {{ mesa.reserva.hora|time:"H:i" }}</small>
+                                {% else %}
+                                    Sem reserva
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{% url 'alterar_status_mesa' mesa.id %}" class="mesa-form" id="form-mesa-{{ mesa.id }}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="reserva_{{ mesa.id }}" class="form-label small fw-bold">
+                                <i class="fas fa-list me-1"></i>Selecionar Reserva
+                            </label>
+                            <select name="reserva" id="reserva_{{ mesa.id }}" class="form-select" {% if mesa.status == 'Ocupada' %}disabled{% endif %}>
+                                <option value="">-- Selecione uma reserva --</option>
+                                {% for reserva in reservas %}
+                                <option value="{{ reserva.id }}" 
+                                    {% if mesa.reserva and mesa.reserva.id == reserva.id %}selected{% endif %}
+                                    data-nome="{{ reserva.nome }}"
+                                    data-pessoas="{{ reserva.quantidade_pessoas }}"
+                                    data-data="{{ reserva.data|date:'d/m/Y' }}"
+                                    data-hora="{{ reserva.hora|time:'H:i' }}">
+                                    {{ reserva.nome }} - {{ reserva.quantidade_pessoas }}p - {{ reserva.data|date:"d/m/Y" }} {{ reserva.hora|time:"H:i" }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">
+                                Selecione uma reserva para alocar na mesa
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-mesa {% if mesa.status == 'Disponível' %}btn-alocar{% else %}btn-liberar{% endif %}" id="btn-mesa-{{ mesa.id }}">
+                            {% if mesa.status == 'Disponível' %}
+                                <i class="fas fa-user-check me-1"></i> Alocar Cliente
+                            {% else %}
+                                <i class="fas fa-door-open me-1"></i> Liberar Mesa
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-table fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Nenhuma mesa cadastrada</h4>
+                <p class="text-muted">Adicione mesas para começar o gerenciamento</p>
+            </div>
+            {% endfor %}
         </div>
 
         <!-- Botão de Fazer Reserva -->
         <div class="text-center mt-4">
-            <a href="{% url 'fazer_reserva_admin' %}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Fazer Reserva Manual
+            <a href="{% url 'fazer_reserva_admin' %}" class="btn-reserva">
+                <i class="fas fa-plus-circle"></i> Fazer Reserva Manual
             </a>
         </div>
     </div>
 
     <!-- Footer -->
-  <footer class="container-fluid">
-    <div class="container">
-      <div class="row"> 
-        <div class="col-12 text-center">  
-          <h5 class="fw-bold mb-3">🍽 Restaurante Sky Lounge</h5> 
-          <div class="mb-3">
-            <a href="#" class="text-white text-decoration-none me-3" title="Instagram">
-              <i class="bi bi-instagram fs-4"></i>
-            </a>
-            <a href="#" class="text-white text-decoration-none me-3" title="Facebook">
-              <i class="bi bi-facebook fs-4"></i>
-            </a>
-            <a href="#" class="text-white text-decoration-none" title="WhatsApp">
-              <i class="bi bi-whatsapp fs-4"></i>
-            </a>
-          </div>  
-          <p class="text-white-50 mb-1">
-            Praça General Tibúrcio s/n°, Praia Vermelha – Urca, Rio de Janeiro
-          </p>  
-          <p class="text-white-50 mb-0">
-            &copy; {% now "Y" %} Restaurante Sky Lounge. Todos os direitos reservados.
-          </p>  
+    <footer class="container-fluid">
+        <div class="container">
+            <div class="row"> 
+                <div class="col-12 text-center">  
+                    <h5 class="fw-bold mb-3">🍽 Restaurante Sky Lounge</h5> 
+                    <div class="social-icons mb-3">
+                        <a href="#" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" title="Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>  
+                    <p class="text-white-50 mb-1">
+                        Praça General Tibúrcio s/n°, Praia Vermelha – Urca, Rio de Janeiro
+                    </p>  
+                    <p class="text-white-50 mb-0">
+                        &copy; {% now "Y" %} Restaurante Sky Lounge. Todos os direitos reservados.
+                    </p>  
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    
+    <script>
+        // Adicionar funcionalidade para o menu mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (mobileMenuBtn && sidebar) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('mobile-open');
+                });
+            }
+            
+            // Adicionar estilos para o modo mobile
+            if (window.innerWidth <= 576) {
+                document.head.insertAdjacentHTML('beforeend', `
+                    <style>
+                        .sidebar.mobile-open {
+                            display: block;
+                            left: 0;
+                            width: 240px;
+                            z-index: 1100;
+                        }
+                        
+                        .sidebar.mobile-open ~ .content {
+                            margin-left: 240px;
+                        }
+                    </style>
+                `);
+            }
 
+            // Calcular estatísticas em tempo real
+            function atualizarEstatisticas() {
+                const mesas = document.querySelectorAll('.mesa-card');
+                let total = mesas.length;
+                let disponiveis = 0;
+                let ocupadas = 0;
+
+                mesas.forEach(mesa => {
+                    const statusElement = mesa.querySelector('.mesa-status');
+                    if (statusElement) {
+                        if (statusElement.textContent.includes('Disponível')) {
+                            disponiveis++;
+                        } else if (statusElement.textContent.includes('Ocupada')) {
+                            ocupadas++;
+                        }
+                    }
+                });
+
+                // Atualizar os valores nas estatísticas
+                const statTotal = document.querySelector('.stat-total .stat-value');
+                const statDisponivel = document.querySelector('.stat-disponivel .stat-value');
+                const statOcupada = document.querySelector('.stat-ocupada .stat-value');
+
+                if (statTotal) statTotal.textContent = total;
+                if (statDisponivel) statDisponivel.textContent = disponiveis;
+                if (statOcupada) statOcupada.textContent = ocupadas;
+            }
+
+            // Funcionalidade de seleção de reserva
+            const selectElements = document.querySelectorAll('select[name="reserva"]');
+            
+            selectElements.forEach(select => {
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const mesaId = this.id.replace('reserva_', '');
+                    const btn = document.getElementById(`btn-mesa-${mesaId}`);
+                    
+                    if (this.value) {
+                        // Habilitar botão se uma reserva for selecionada
+                        btn.disabled = false;
+                        btn.classList.remove('btn-loading');
+                    } else {
+                        // Desabilitar botão se nenhuma reserva for selecionada
+                        btn.disabled = true;
+                    }
+                });
+            });
+
+            // Loading state nos formulários
+            const forms = document.querySelectorAll('.mesa-form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const btn = this.querySelector('button[type="submit"]');
+                    const select = this.querySelector('select[name="reserva"]');
+                    
+                    // Verificar se uma reserva foi selecionada para mesas disponíveis
+                    if (btn.classList.contains('btn-alocar') && !select.value) {
+                        e.preventDefault();
+                        alert('Por favor, selecione uma reserva para alocar na mesa.');
+                        return;
+                    }
+                    
+                    // Adicionar loading state
+                    btn.classList.add('btn-loading');
+                    btn.disabled = true;
+                    this.classList.add('loading');
+
+                    // Atualizar estatísticas após um pequeno delay (simulando processamento)
+                    setTimeout(atualizarEstatisticas, 100);
+                });
+            });
+
+            // Atualizar dinamicamente as informações do cliente quando uma reserva é selecionada
+            selectElements.forEach(select => {
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const mesaId = this.id.replace('reserva_', '');
+                    const card = this.closest('.mesa-card');
+                    const clienteAvatar = card.querySelector('.cliente-avatar');
+                    const clienteNome = card.querySelector('.cliente-info h5');
+                    const clienteDetalhes = card.querySelector('.cliente-info p');
+                    
+                    if (this.value && selectedOption.dataset.nome) {
+                        // Atualizar preview com os dados da reserva selecionada
+                        clienteAvatar.innerHTML = selectedOption.dataset.nome.charAt(0).toUpperCase();
+                        clienteNome.textContent = selectedOption.dataset.nome;
+                        clienteDetalhes.innerHTML = `
+                            ${selectedOption.dataset.pessoas} pessoa${selectedOption.dataset.pessoas != '1' ? 's' : ''}
+                            <br>
+                            <small class="text-muted">${selectedOption.dataset.data} às ${selectedOption.dataset.hora}</small>
+                        `;
+                    } else if (!this.value) {
+                        // Resetar para estado disponível
+                        clienteAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                        clienteNome.textContent = 'Disponível';
+                        clienteDetalhes.textContent = 'Sem reserva';
+                    }
+                });
+            });
+
+            // Inicializar estado dos botões baseado na seleção atual
+            selectElements.forEach(select => {
+                const mesaId = select.id.replace('reserva_', '');
+                const btn = document.getElementById(`btn-mesa-${mesaId}`);
+                
+                if (select.value) {
+                    btn.disabled = false;
+                } else if (btn.classList.contains('btn-alocar')) {
+                    btn.disabled = true;
+                }
+            });
+
+            // Inicializar estatísticas
+            atualizarEstatisticas();
+        });
+    </script>
+</body> 
 </html>

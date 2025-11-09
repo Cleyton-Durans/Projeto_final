@@ -1,583 +1,1045 @@
+{% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<head>
-  {% load static %}
-  {% load widget_tweaks %}
+<head>  
   <meta charset="UTF-8">
-  <title>Restaurante - sky Loung</title>
+  <title>Restaurante Sky Lounge - Experiência Gastronômica Única</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Restaurante Sky Lounge - Gastronomia premium com vista para a Praia Vermelha no Rio de Janeiro">
 
-  <!-- <head> animation -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- CSS Libraries -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-  <!-- Font Awesome CSS para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- fontes -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
 
-  <!-- Scripts -->
-  <!-- Bootstrap Bundle JS (inclui o JavaScript necessário) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
-  <link rel="stylesheet" href="{% static 'js/javascripts.js' %}">
-  <link rel="stylesheet" href="{% static 'js/main.js' %}">
-  
-
-  
   <style>
-    /* CSS MODAL */
-    .modal.fade .modal-dialog {
-      transform: scale(0.95);
-      transition: all 0.25s ease;
+    :root {
+      --primary: #e76b49;
+      --primary-dark: #d45a38;
+      --secondary: #2c3e50;
+      --accent: #f39c12;
+      --light: #f8f9fa;
+      --dark: #1a1a2e;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
     }
 
-    .modal.fade.show .modal-dialog {
-      transform: scale(1);
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* EFEITO HOVER IMAGEM */
-    #imagem {
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-      cursor: pointer;
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background-color: var(--light);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    #imagem:hover {
-      transform: scale(1.1);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+      transition: var(--transition);
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary) !important;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--secondary) !important;
+      margin: 0 0.5rem;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary) !important;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 50px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(231, 107, 73, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(231, 107, 73, 0.4);
+    }
+
+    /* Hero Carousel */
+    .hero-carousel {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-item {
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .carousel-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+    }
+
+    .carousel-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      z-index: 2;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    .carousel-content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.5s forwards;
+    }
+
+    .carousel-content p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.7s forwards;
+    }
+
+    .carousel-buttons {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.9s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0 2rem;
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+      background: var(--primary);
+    }
+
+    .carousel-indicators {
+      bottom: 2rem;
+    }
+
+    .carousel-indicators button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin: 0 5px;
+      border: 2px solid white;
+      background: transparent;
+      transition: var(--transition);
+    }
+
+    .carousel-indicators button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Section Styling */
+    .section {
+      padding: 5rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--primary);
+      margin: 1rem auto;
+    }
+
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .card:hover .card-img-top {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--secondary);
+    }
+
+    .card-text {
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    /* Menu Button */
+    .btn-menu {
+      background: var(--secondary);
+      color: white;
+      border-radius: 50px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-menu:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(44, 62, 80, 0.3);
+    }
+
+    /* Modal */
+    .modal-content {
+      border: none;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      background: var(--primary);
+      color: white;
+      border-bottom: none;
+      padding: 1.5rem;
+    }
+
+    .modal-title {
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      transition: var(--transition);
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(231, 107, 73, 0.25);
+    }
+
+    /* Map Section */
+    .map-section {
+      background: var(--secondary);
+      color: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    #map {
+      height: 400px;
+      border-radius: var(--border-radius);
+    }
+
+    .featured-dishes {
+      padding: 2rem;
+    }
+
+    .dish-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dish-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dish-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Team Section */
+    .team-member {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .team-img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      border: 5px solid white;
+      box-shadow: var(--box-shadow);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 3rem 0 1.5rem;
+    }
+
+    .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: white;
+      margin: 0 0.5rem;
+      transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+      background: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* Alert */
+    .alert-success {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: none;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .carousel-content h1 {
+        font-size: 2.5rem;
+      }
+      
+      .carousel-content p {
+        font-size: 1rem;
+      }
+      
+      .section {
+        padding: 3rem 0;
+      }
+      
+      .carousel-control-prev, .carousel-control-next {
+        margin: 0 1rem;
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    /* Animation Classes */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 10;
     }
 
-    @media (max-width: 768px) {
-      #home {
-        display: none;
-        visibility: hidden;
+    .scroll-down {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 2px solid white;
+      border-radius: 50%;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bounce 2s infinite;
+      transition: var(--transition);
+    }
+
+    .scroll-down:hover {
+      background: white;
+      color: var(--primary);
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
       }
-      #servicos {
-        margin-top: 20px;
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
       }
     }
   </style>
 </head>
 
-<body class="container-fluid">
-  <div class="col-sl-12">
-    <!-- ALERTA DE SUCESSO (fora da navbar, no topo da página) -->
-    {% if messages %}
+<body>
+  <!-- Alertas de Sucesso -->
+  {% if messages %}
     {% for message in messages %}
-    <div id="success-alert"
-      class="alert alert-success alert-dismissible fade text-center position-fixed top-50 start-50 translate-middle shadow-lg"
-      style="display: none; z-index: 2000; border-radius: 30px; width: 90%; max-width: 400px; transform: translate(-50%, -50%);"
-      role="alert">
-      <i class="bi bi-check-circle-fill me-2"></i> {{ message }}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle me-2"></i> {{ message }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endfor %}
-    {% endif %}
+  {% endif %}
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top" id="nav">
-      <div class="container">
-        <a class="navbar-brand fw-bold text-black" href="#">🍽 Restaurante Sky Lounge</a>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-utensils me-2"></i>Sky Lounge
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#cardapio">Cardápio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#quemsomos">Quem Somos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              <i class="fas fa-lock me-1"></i> Acesso
+            </a>
+          </li>
+          <li class="nav-item ms-2">
+            <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#reservaModal">
+              <i class="fas fa-calendar-check me-1"></i> Reserve Aqui
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-          <ul class="navbar-nav align-items-center">
-            <li class="nav-item">
-              <a class="nav-link active fw-semibold" aria-current="page" href="#home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-semibold" href="#quemsomos">Quem Somos</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link fw-semibold " href="{% url 'minhas_reservas' %}">Consultar Reservas</a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'login' %}" class="btn">
-                <i class="bi bi-lock-fill me-2"></i> Acesso
+  <!-- Hero Carousel -->
+  <section class="hero-carousel" id="home">
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" img src="{% static 'img/9.png' %}">
+          <div class="carousel-content">
+            <h1>Bem-vindo ao Sky Lounge</h1>
+            <p class="lead">Uma experiência gastronômica única à beira da Praia Vermelha, com pratos sofisticados e ambiente acolhedor.</p>
+            <div class="carousel-buttons">
+              <a href="#cardapio" class="btn btn-primary me-3">
+                <i class="fas fa-utensils me-1"></i> Ver Cardápio
               </a>
-
-            </li>
-            <li class="nav-item ms-lg-3">
-              <a class="btn btn-primary rounded-pill px-3 py-1 fw-semibold shadow" href="#reservaModal"
-                data-bs-toggle="modal" data-bs-target="#reservaModal">
-                <i class="bi bi-calendar-check me-1"></i> Reserve Aqui
+              <a href="#" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#reservaModal">
+                <i class="fas fa-calendar-alt me-1"></i> Fazer Reserva
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="carousel-item" img src="{% static 'img/10.png' %}">
+          <div class="carousel-content">
+            <h1>Sabores Inesquecíveis</h1>
+            <p class="lead">Descubra nossa seleção exclusiva de frutos do mar frescos e pratos especiais preparados com ingredientes selecionados.</p>
+            <div class="carousel-buttons">
+              <a href="#cardapio" class="btn btn-primary me-3">
+                <i class="fas fa-star me-1"></i> Pratos Especiais
+              </a>
+              <a href="#" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#reservaModal">
+                <i class="fas fa-wine-glass me-1"></i> Experiência Completa
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="carousel-item" img src="{% static 'img/7.png' %}">
+          <div class="carousel-content">
+            <h1>Vista Deslumbrante</h1>
+            <p class="lead">Aprecie momentos especiais em nosso ambiente privilegiado com vista para a Praia Vermelha e o Pão de Açúcar.</p>
+            <div class="carousel-buttons">
+              <a href="#mapa" class="btn btn-primary me-3">
+                <i class="fas fa-map-marked-alt me-1"></i> Nossa Localização
+              </a>
+              <a href="#" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#reservaModal">
+                <i class="fas fa-camera me-1"></i> Reserve Sua Mesa
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
-    <!-- FIM NAVBAR -->
-
+      <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Próximo</span>
+      </button>
+    </div>
     
-    <section id="home" class=" text-black text-center" id="carrousel"> <!-- Início section -->
-      <div id="carouselExampleIndicators" class="carousel slide"> <!-- Início Carrosel -->
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-            aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-            aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-            aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="{% static 'img/9.png' %}" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item">
-            <img src="{% static 'img/10.png' %}" class="d-block w-100" alt="...">
-          </div>
-          <div class="carousel-item">
-            <img src="{% static 'img/7.png' %}" class="d-block w-100" alt="...">
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div> <!-- Fim Carrosel -->
-    </section> <!-- Fim section -->
+    <div class="scroll-indicator">
+      <a href="#cardapio" class="scroll-down">
+        <i class="fas fa-chevron-down"></i>
+      </a>
+    </div>
+  </section>
 
-    <!--inicio detalhes -->
-    <section id="servicos" class="text-black text-center py-5 " data-aos="fade-up" data-aos-duration="1000"
-      data-aos-delay="200" data-aos-once="true"> <!-- Início Detalhes -->
-      <div class="container">
-        <h1 class="mb-4" style="font-family: American Typewriter, serif;">Cardapio do Restaurante </h1>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+  <!-- Cardápio Section -->
+  <section class="section" id="cardapio">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <h2>Cardápio Exclusivo</h2>
+        <p class="text-muted">Pratos selecionados com ingredientes frescos e sabores únicos</p>
+      </div>
 
-          <!-- Card 1 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/01.jpg' %}" class="card-img-top" alt="Lagosta Defumada">
-              <div class="card-body">
-                <h5 class="card-title">Lagosta Defumada</h5>
-                <p class="card-text">Lagosta grelhada servida com purê de mandioca e farofa crocante.</p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 98,90</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/02.jpg' %}" class="card-img-top" alt="Moqueca de Camarão">
-              <div class="card-body">
-                <h5 class="card-title">Moqueca de Camarão</h5>
-                <p class="card-text">Camarões frescos cozidos em leite de coco, azeite de dendê e temperos típicos.
-                </p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 74,90</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/03.jpg' %}" class="card-img-top" alt="Ceviche de Tilápia">
-              <div class="card-body">
-                <h5 class="card-title">Ceviche de Tilápia</h5>
-                <p class="card-text">Tilápia marinada no limão com cebola roxa, pimenta e coentro fresco.</p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 39,90</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/04.jpg' %}" class="card-img-top" alt="Lagosta com Tupi">
-              <div class="card-body">
-                <h5 class="card-title">Lagosta com Tupi</h5>
-                <p class="card-text">Deliciosa lagosta servida com vinagrete e arroz de coco.</p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 98,90</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/9.webp' %}" class="card-img-top" alt="Lagosta Grelhada">
-              <div class="card-body">
-                <h5 class="card-title">Lagosta Grelhada</h5>
-                <p class="card-text">Lagosta grelhada na manteiga de ervas, acompanhada de legumes salteados.</p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 79,90</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 6 -->
-          <div class="col">
-            <div class="card h-100 custom-card">
-              <img src="{% static 'img/carrousel/06.jpg' %}" class="card-img-top" alt="Filé Mignon Grelhado">
-              <div class="card-body">
-                <h5 class="card-title">Filé Mignon Grelhado</h5>
-                <p class="card-text">Suculento filé mignon grelhado no ponto perfeito, servido com batatas rústicas e
-                  molho da casa.</p>
-              </div>
-              <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Ver Detalhes</button>
-                </div>
-                <small class="text-muted">R$ 59,90</small>
+      <div class="row g-4">
+        <!-- Card 1 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="card">
+            <img src="{% static 'img/carrousel/01.jpg' %}" class="card-img-top" alt="Lagosta Defumada">
+            <div class="card-body">
+              <h5 class="card-title">Lagosta Defumada</h5>
+              <p class="card-text">Lagosta grelhada servida com purê de mandioca e farofa crocante.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 98,90</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="col text-center" alingn="center">
-          <div class="text-center" style="margin-top: 20px;" data-aos="fade-up" data-aos-duration="1000"
-            data-aos-delay="200" data-aos-once="true">
-            <a href="https://gruporubaiyat.com/qrcode/rio/por/cardapio.pdf" class="btn btn-gradient" id="btn-gradient">
-              🍽️ Menu Completo
-            </a>
+
+        <!-- Card 2 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="card">
+            <img src="{% static 'img/carrousel/02.jpg' %}" class="card-img-top" alt="Moqueca de Camarão">
+            <div class="card-body">
+              <h5 class="card-title">Moqueca de Camarão</h5>
+              <p class="card-text">Camarões frescos cozidos em leite de coco, azeite de dendê e temperos típicos.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 74,90</span>
+              </div>
+            </div>
           </div>
         </div>
-    </section> <!-- Fim Detalhes -->
 
-    <!-- Modal -->
-    <div class="modal fade" id="reservaModal" tabindex="-1" aria-labelledby="reservaModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Aumentado para modal-lg -->
-        <div class="modal-content border-0 rounded-4 shadow-lg" style="overflow: hidden;">
-
-          <!-- Cabeçalho -->
-          <div class="modal-header border-0 py-2" style="background-color: #E76B49; color: #FFF;">
-            <h6 class="modal-title fw-bold m-0" id="reservaModalLabel">
-              <i class="bi bi-envelope-check me-2"></i> Faça Sua Reserva
-            </h6>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
-              style="scale: 0.9;"></button>
+        <!-- Card 3 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="card">
+            <img src="{% static 'img/carrousel/03.jpg' %}" class="card-img-top" alt="Ceviche de Tilápia">
+            <div class="card-body">
+              <h5 class="card-title">Ceviche de Tilápia</h5>
+              <p class="card-text">Tilápia marinada no limão com cebola roxa, pimenta e coentro fresco.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 39,90</span>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <!-- Corpo -->
-          <div class="modal-body" style="
-        background-color: #E76B49;
-        color: #FFF;
-        font-family: Arial, sans-serif;
-        padding: 24px;
-      ">
-            <form method="POST" novalidate style="text-align: left; font-size: 0.9rem;">
-              {% csrf_token %}
-
-              {% for field in form %}
-              {% if field.name == 'data' %}
-              <div class="row">
-                <div class="col-6 mb-2">
-                  <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem;">{{ field.label }}</label>
-                  {{ field }}
-                  {% if field.errors %}
-                  <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-                  {% endif %}
-                </div>
-                {% elif field.name == 'hora' %}
-                <div class="col-6 mb-2">
-                  <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem;">{{ field.label }}</label>
-                  {{ field }}
-                  {% if field.errors %}
-                  <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-                  {% endif %}
-                </div>
+        <!-- Card 4 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="card">
+            <img src="{% static 'img/carrousel/04.jpg' %}" class="card-img-top" alt="Lagosta com Tupi">
+            <div class="card-body">
+              <h5 class="card-title">Lagosta com Tupi</h5>
+              <p class="card-text">Deliciosa lagosta servida com vinagrete e arroz de coco.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 98,90</span>
               </div>
-              {% else %}
-              <div class="mb-2">
-                <label class="form-label fw-semibold mb-1" style="font-size: 0.85rem;">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-                {% endif %}
-              </div>
-              {% endif %}
-              {% endfor %}
+            </div>
+          </div>
+        </div>
 
-              <button type="submit" class="btn btn-light w-100 py-2 mt-2 fw-bold text-uppercase rounded-pill shadow-sm"
-                style="color: #E76B49; font-size: 0.9rem;">
-                <i class="bi bi-send-fill me-1"></i> Enviar
-              </button>
-            </form>
+        <!-- Card 5 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="card">
+            <img src="{% static 'img/carrousel/9.webp' %}" class="card-img-top" alt="Lagosta Grelhada">
+            <div class="card-body">
+              <h5 class="card-title">Lagosta Grelhada</h5>
+              <p class="card-text">Lagosta grelhada na manteiga de ervas, acompanhada de legumes salteados.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 79,90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="card">
+            <img src="{% static 'img/carrousel/06.jpg' %}" class="card-img-top" alt="Filé Mignon Grelhado">
+            <div class="card-body">
+              <h5 class="card-title">Filé Mignon Grelhado</h5>
+              <p class="card-text">Suculento filé mignon grelhado no ponto perfeito, servido com batatas rústicas e molho da casa.</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-outline-primary btn-sm">Ver Detalhes</button>
+                <span class="price">R$ 59,90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5" data-aos="fade-up">
+        <a href="https://gruporubaiyat.com/qrcode/rio/por/cardapio.pdf" class="btn-menu">
+          <i class="fas fa-book me-2"></i> Menu Completo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa e Pratos em Destaque -->
+  <section class="section bg-light" id="mapa">
+    <div class="container">
+      <div class="row g-5 align-items-center">
+        <!-- Mapa -->
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="map-section">
+            <div class="p-4">
+              <h3 class="mb-3">📍 Onde Estamos</h3>
+              <p class="mb-3">Praça General Tibúrcio s/n°, Praia Vermelha – Urca, Rio de Janeiro</p>
+              <div id="map"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pratos em Destaque -->
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="p-4">
+            <h3 class="mb-4">🍽️ Pratos em Destaque</h3>
+            <ul class="dish-list">
+              <li><i class="fas fa-fish text-primary"></i> Risoto de Frutos do Mar</li>
+              <li><i class="fas fa-drumstick-bite text-primary"></i> Picanha Grelhada com Manteiga de Alho</li>
+              <li><i class="fas fa-shrimp text-primary"></i> Camarão ao Molho de Champagne</li>
+              <li><i class="fas fa-leaf text-primary"></i> Salada Mediterrânea</li>
+              <li><i class="fas fa-cheese text-primary"></i> Queijo Coalho Grelhado</li>
+            </ul>
+            <p class="mt-4">
+              O <strong>Restaurante Sky Lounge</strong> oferece experiências gastronômicas únicas à beira da Praia
+              Vermelha. Venha saborear nossos pratos frescos e curtir um ambiente acolhedor com vista deslumbrante.
+            </p>
+            <div class="mt-4">
+              <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reservaModal">
+                <i class="fas fa-calendar-alt me-1"></i> Fazer Reserva
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Fim Modal -->
+  </section>
 
+  <!-- Quem Somos Section -->
+  <section class="section" id="quemsomos">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <h2>Nossa Equipe</h2>
+        <p class="text-muted">Profissionais dedicados à excelência gastronômica</p>
+      </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const reservaModalElement = document.getElementById('reservaModal');
-        const reservaModal = new bootstrap.Modal(reservaModalElement);
-        const temErro = document.querySelector('.is-invalid, .text-danger');
+      <div class="row justify-content-center">
+        <!-- Chef João -->
+        <div class="col-md-5" data-aos="fade-right">
+          <div class="team-member">
+            <img src="{% static 'img/chef.jpg' %}" class="team-img" alt="Chef João">
+            <h4>Chef João</h4>
+            <p class="text-muted">Especialista em frutos do mar frescos</p>
+            <p>Com mais de 20 anos de experiência, o Chef João traz criatividade e técnica para cada prato, garantindo uma experiência única aos nossos clientes.</p>
+          </div>
+        </div>
 
-        // Se o Django retornou erros no formulário, reabre o modal automaticamente
-        if (temErro) {
-          reservaModal.show();
+        <!-- Mario -->
+        <div class="col-md-5" data-aos="fade-left">
+          <div class="team-member">
+            <img src="{% static 'img/atendente.jpg' %}" class="team-img" alt="Mario">
+            <h4>Mario</h4>
+            <p class="text-muted">Gerente de Atendimento</p>
+            <p>Responsável pelo atendimento acolhedor que nossos clientes amam, Mario garante que cada visita ao Sky Lounge seja memorável.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Informações Section -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Endereço -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+          <div class="text-center">
+            <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+            <h5>ENDEREÇO</h5>
+            <p class="text-muted mt-3">
+              Praça General Tibúrcio s/n°<br>
+              Praia Vermelha, Urca – RJ<br>
+              (Dentro do clube Círculo Militar)
+            </p>
+            <p class="mt-3">
+              <i class="fas fa-phone me-2"></i>+55 21 2275-4651<br>
+              <i class="fas fa-mobile-alt me-2"></i>97190-1654
+            </p>
+          </div>
+        </div>
+
+        <!-- Pagamento -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+          <div class="text-center">
+            <i class="fas fa-credit-card fa-2x text-primary mb-3"></i>
+            <h5>PAGAMENTO</h5>
+            <p class="text-muted mt-3">
+              Todas as bandeiras de Débito e Crédito, Alelo Refeição, VR, TR,
+              Sodexo Refeição e Ben Visa Vale.
+            </p>
+          </div>
+        </div>
+
+        <!-- Horário -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+          <div class="text-center">
+            <i class="fas fa-clock fa-2x text-primary mb-3"></i>
+            <h5>HORÁRIO</h5>
+            <p class="text-muted mt-3">
+              Todos os dias<br>
+              (inclusive feriados)<br>
+              das 12h até as 23h
+            </p>
+          </div>
+        </div>
+
+        <!-- Avaliação -->
+        <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+          <div class="text-center">
+            <i class="fas fa-star fa-2x text-primary mb-3"></i>
+            <h5>AVALIAÇÃO</h5>
+            <div class="mt-3">
+              <img src="{% static 'img/check.jpg' %}" alt="Avaliação" class="img-fluid" style="max-width: 120px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal de Reserva -->
+  <div class="modal fade" id="reservaModal" tabindex="-1" aria-labelledby="reservaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reservaModalLabel">
+            <i class="fas fa-calendar-check me-2"></i> Faça Sua Reserva
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {% render_field field class="form-control" %}
+              {% if field.errors %}
+              <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary w-100 py-2 mt-3">
+              <i class="fas fa-paper-plane me-2"></i> Confirmar Reserva
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <h4 class="mb-3">
+            <i class="fas fa-utensils me-2"></i>Restaurante Sky Lounge
+          </h4>
+          <p class="mb-3">Uma experiência gastronômica única à beira da Praia Vermelha, com pratos sofisticados e ambiente acolhedor.</p>
+          <div class="social-icons">
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" title="TripAdvisor"><i class="fab fa-tripadvisor"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-3 mb-4 mb-lg-0">
+          <h5 class="mb-3">Contato</h5>
+          <p>
+            <i class="fas fa-map-marker-alt me-2"></i>Praça General Tibúrcio s/n°<br>
+            <span class="ms-4">Praia Vermelha – Urca, RJ</span>
+          </p>
+          <p><i class="fas fa-phone me-2"></i>+55 21 2275-4651</p>
+          <p><i class="fas fa-mobile-alt me-2"></i>97190-1654</p>
+        </div>
+        <div class="col-lg-3">
+          <h5 class="mb-3">Horário</h5>
+          <p><i class="fas fa-clock me-2"></i>Todos os dias</p>
+          <p><i class="fas fa-calendar me-2"></i>Inclusive feriados</p>
+          <p><i class="fas fa-utensils me-2"></i>12h às 23h</p>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div class="text-center">
+        <p class="mb-0">&copy; {% now "Y" %} Restaurante Sky Lounge. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    // Inicializar AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Inicializar Mapa
+    var map = L.map('map').setView([-22.9548, -43.1649], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([-22.9548, -43.1649]).addTo(map)
+      .bindPopup('<b>Restaurante Sky Lounge</b><br>Praia Vermelha – Urca, RJ')
+      .openPopup();
+
+    // Scroll suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
         }
       });
-    </script>
+    });
 
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 100) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
+    });
 
-    <!-- 🌟 SEÇÃO MAPA E AVALIAÇÃO -->
-    <div class="container my-5">
-      <section id="reserva-mapa" class="row g-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200"
-        data-aos-once="true">
-
-        <!-- 🌟 SEÇÃO MAPA E PRATOS EM DESTAQUE -->
-        <div class="container my-5">
-          <section id="reserva-mapa" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200"
-            data-aos-once="true">
-            <div class="row g-4">
-
-              <!-- Mapa -->
-              <div class="col-md-6">
-                <div style="background-color: #FFF; color: #000; padding: 30px; border-radius: 10px;">
-                  <h2 class="mb-3">📍 Onde Estamos</h2>
-                  <p>Praça General Tibúrcio s/n°, Praia Vermelha – Urca, Rio de Janeiro</p>
-                  <div id="map" style="height: 400px; border-radius: 10px;"></div>
-                </div>
-              </div>
-
-              <!-- Pratos em Destaque -->
-              <div class="col-md-6">
-                <div style="background-color: #FFF; color: #000; padding: 30px; border-radius: 10px;">
-                  <h2 class="mb-3">🍽️ Pratos em Destaque</h2>
-
-                  <!-- Pratos -->
-                  <ul class="list-unstyled mb-3">
-                    <li>🦀 Risoto de Frutos do Mar</li>
-                    <li>🥩 Picanha Grelhada com Manteiga de Alho</li>
-                    <li>🍤 Camarão ao Molho de Champagne</li>
-                    <li>🥗 Salada Mediterrânea</li>
-                  </ul>
-
-                  <!-- Pequena descrição -->
-                  <p style="font-size: 0.95rem;">
-                    O <strong>Restaurante Sky Lounge</strong> oferece experiências gastronômicas únicas à beira da Praia
-                    Vermelha. Venha saborear nossos pratos frescos e curtir um ambiente acolhedor com vista
-                    deslumbrante.
-                  </p>
-
-                  <!-- Botão de reserva -->
-                  <a href="#reservaModal" class="btn btn-primary rounded-pill mt-2" data-bs-toggle="modal">
-                    Fazer Reserva
-                  </a>
-                </div>
-              </div>
-
-            </div>
-          </section>
-
-          <!-- Leaflet CSS e JS -->
-          <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-          <script>
-            var map = L.map('map').setView([-22.9548, -43.1649], 15); // coordenadas da Urca
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '© OpenStreetMap'
-            }).addTo(map);
-
-            L.marker([-22.9548, -43.1649]).addTo(map)
-              .bindPopup('<b>Restaurante Sky Lounge</b><br>Praia Vermelha – Urca, RJ')
-              .openPopup(); 
-          </script>
-        </div>
-
-
-
-        <!-- 🌟 SEÇÃO AVALIAÇÃO -->
-        <section id="avaliacao" class="text-black text-center py-5" data-aos="fade-up" data-aos-duration="1000"
-          data-aos-delay="200" data-aos-once="true">
-          <div class="container">
-            <div class="row gy-4">
-
-              <!-- Endereço -->
-              <div class="col-md-3">
-                <h3>ENDEREÇO</h3>
-                <div class="descricao mt-4">
-                  <p>
-                    Praça General Tibúrcio s/n°<br>
-                    Praia Vermelha, Urca – RJ<br>
-                    (Dentro do clube Círculo Militar da Praia Vermelha)
-                  </p>
-                </div>
-                <p class="mt-3">+55 21 2275-4651 | 97190-1654</p>
-              </div>
-
-              <!-- Pagamento -->
-              <div class="col-md-3">
-                <h3>PAGAMENTO</h3>
-                <div class="descricao mt-4">
-                  <p>
-                    Todas as bandeiras de Débito e Crédito, Alelo Refeição, VR, TR,
-                    Sodexo Refeição e Ben Visa Vale.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Horário -->
-              <div class="col-md-3">
-                <h3>HORÁRIO DE FUNCIONAMENTO</h3>
-                <div class="descricao mt-4">
-                  <p>
-                    Todos os dias<br>
-                    (inclusive aos feriados)<br>
-                    das 12h até as 23h
-                  </p>
-                </div>
-              </div>
-
-              <!-- Avaliação -->
-              <div class="col-md-3">
-                <h3>AVALIAÇÃO</h3>
-                <div class="descricao mt-4">
-                  <img src="{% static 'img/check.jpg' %}" alt="Avaliação" class="img-fluid"
-                    style="max-width: 100px; max-height: 100px;">
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <hr>
-    </div>
-    <!-- 👨‍🍳 SEÇÃO QUEM SOMOS -->
-    <!-- 👨‍🍳 SEÇÃO QUEM SOMOS -->
-    <section id="quemsomos" class="text-center container-fluid py-5" data-aos="fade-up" data-aos-duration="1000">
-      <div class="container">
-        <h2 class="mb-5">Nossa Equipe</h2>
-        <div class="row justify-content-center align-items-center">
-
-          <!-- Chef João -->
-          <div class="col-md-6 mb-5 mb-md-0 d-flex flex-column align-items-center">
-            <img src="{% static 'img/chef.jpg' %}" class="img-fluid rounded-circle shadow-lg mb-4" alt="Chef João"
-              style="width: 280px; height: 280px; object-fit: cover;">
-            <h5 class="mt-2 fw-bold">Chef João</h5>
-            <p>Especialista em frutos do mar frescos, com mais de 20 anos de experiência.</p>
-          </div>
-
-          <!-- Mario -->
-          <div class="col-md-6 d-flex flex-column align-items-center">
-            <img src="{% static 'img/atendente.jpg' %}" class="img-fluid rounded-circle shadow-lg mb-4" alt="Mario"
-              style="width: 280px; height: 280px; object-fit: cover;">
-            <h5 class="mt-2 fw-bold">Mario</h5>
-            <p>Responsável pelo atendimento acolhedor que nossos clientes amam.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Início Footer -->
-    <footer class="container-fluid bg-dark text-white pt-4 pb-3 mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 text-center">
-
-            <h5 class="fw-bold mb-3">🍽 Restaurante Sky Lounge</h5>
-
-            <div class="mb-3">
-              <a href="#" class="text-white text-decoration-none me-3" title="Instagram">
-                <i class="bi bi-instagram fs-4"></i>
-              </a>
-              <a href="#" class="text-white text-decoration-none me-3" title="Facebook">
-                <i class="bi bi-facebook fs-4"></i>
-              </a>
-              <a href="#" class="text-white text-decoration-none" title="WhatsApp">
-                <i class="bi bi-whatsapp fs-4"></i>
-              </a>
-            </div>
-
-            <p class="text-white-50 mb-1">
-              Praça General Tibúrcio s/n°, Praia Vermelha – Urca, Rio de Janeiro
-            </p>
-
-            <p class="text-white-50 mb-0">
-              &copy; {% now "Y" %} Restaurante Sky Lounge. Todos os direitos reservados.
-            </p>
-
-          </div>
-
-        </div>
-      </div>
-    </footer> <!-- Fim Footer -->
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script> <!-- AOS Animation JS -->
-    <script>
-      AOS.init();
-    </script>
-
-    <!-- Smooth Scroll JS -->
-    <script>
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-
-          const target = document.querySelector(this.getAttribute('href'));
-          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
-          const startPosition = window.pageYOffset;
-          const distance = targetPosition - startPosition;
-          const duration = 500; // tempo da animação em ms (0.5 segundos)
-          let start = null;
-
-          function step(timestamp) {
-            if (!start) start = timestamp;
-            const progress = timestamp - start;
-            const progressRatio = Math.min(progress / duration, 1);
-            window.scrollTo(0, startPosition + distance * progressRatio);
-            if (progress < duration) requestAnimationFrame(step);
+    // Abrir modal se houver erros no formulário
+    document.addEventListener('DOMContentLoaded', function() {
+      const reservaModal = new bootstrap.Modal(document.getElementById('reservaModal'));
+      const hasErrors = document.querySelector('.is-invalid');
+      
+      if (hasErrors) {
+        reservaModal.show();
+      }
+      
+      // Fade in elements on scroll
+      const fadeElements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
           }
-
-          requestAnimationFrame(step);
         });
-      });
-    </script> <!-- Fim Smooth Scroll JS -->
+      }, { threshold: 0.1 });
+      
+      fadeElements.forEach(el => observer.observe(el));
 
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Leaflet CSS e JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+      // Pausar carousel no hover
+      const carousel = document.getElementById('mainCarousel');
+      if (carousel) {
+        const bsCarousel = new bootstrap.Carousel(carousel);
+        
+        carousel.addEventListener('mouseenter', () => {
+          bsCarousel.pause();
+        });
+        
+        carousel.addEventListener('mouseleave', () => {
+          bsCarousel.cycle();
+        });
+      }
+    });
+  </script>
 </body>
-
 </html>

@@ -6,272 +6,660 @@
 <head>
   <meta charset="UTF-8">
   <title>Lista de Reservas - Restaurante Sky Lounge</title> 
+  <meta author="Cleyton Durans"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
   
   <style>
+    :root {
+      --primary-color: #3a86ff;
+      --secondary-color: #8338ec;
+      --success-color: #06d6a0;
+      --warning-color: #ffd166;
+      --danger-color: #ef476f;
+      --dark-color: #1a1a2e;
+      --light-color: #f8f9fa;
+      --gray-color: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
     body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f8f9fa;
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fb;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       margin: 0;
+      color: #333;
     }
 
     h1, h2 {
       font-weight: 700;
-      color: #343a40;
-    } 
-
+      color: var(--dark-color);
+    }   
 
     .sidebar {
       position: fixed;
       top: 0;
-      left: -205px;
+      left: 0;
       height: 100vh;
-      width: 220px;
-      background-color: #343a40;
-      padding-top: 1rem;
-      transition: left 0.3s ease; 
+      width: 58px;
+      background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+      padding-top: 1.5rem;
+      transition: width 0.3s ease; 
       color: #fff;
-      z-index: 1000;  
+      z-index: 1000;
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
     }
-    .sidebar:hover { left: 0; }
+    
+    .sidebar:hover {
+      width: 240px;
+    }
+    
     .sidebar a {  
       display: flex;
       align-items: center;
-      gap: .5rem;
-      padding: .75rem 1rem;
+      gap: 1rem;
+      padding: .85rem 1.5rem;
       color: #fff;
       text-decoration: none;
-      transition: background 0.3s;
-      border-radius: 5px;
+      transition: var(--transition);
+      border-radius: 0;
+      margin: 0.25rem 0.5rem;
+      border-radius: 8px;
+      white-space: nowrap;
     }
-    .sidebar a:hover { background-color: #495057; }
-    .sidebar .active { background-color: #28a745; }
+    
+    .sidebar a:hover { 
+      background-color: rgba(255, 255, 255, 0.15); 
+      transform: translateX(5px);
+    }
+    
+    .sidebar .active { 
+      background-color: rgba(255, 255, 255, 0.2); 
+      position: relative;
+    }
+    
+    .sidebar .active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background-color: white;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .sidebar-header {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      padding: 0 1.5rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-header i {
+      font-size: 1.5rem;
+    }
 
     .content {
       flex: 1;
-      margin-left: 0;
+      margin-left: 80px;
       padding: 2rem;  
       transition: margin-left 0.3s ease;
     }
-    .sidebar:hover ~ .content { margin-left: 220px; }   
+    
+    .sidebar:hover ~ .content { 
+      margin-left: 240px; 
+    }   
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--dark-color);
+      margin: 0;
+    }
+
+    .btn-logout {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      color: white;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: var(--transition);
+      box-shadow: 0 2px 10px rgba(58, 134, 255, 0.3);
+    }
+    
+    .btn-logout:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4);
+      color: white;
+    }
+
+    .card {
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      background: white;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--dark-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .card-title i {
+      color: var(--primary-color);
+    }
 
     .table {
-      margin-bottom: 2rem;
+      margin-bottom: 0;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    
+    .table thead th {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border: none;
+      position: sticky;
+      top: 0;
+    }
+    
+    .table tbody tr {
+      transition: var(--transition);
+    }
+    
+    .table tbody tr:hover {
+      background-color: rgba(58, 134, 255, 0.05);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .table td {
+      padding: 1rem 1.25rem;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .badge {
+      font-weight: 500;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    
+    .badge-confirmed {
+      background-color: rgba(6, 214, 160, 0.15);
+      color: var(--success-color);
+    }
+    
+    .badge-cancelled {
+      background-color: rgba(239, 71, 111, 0.15);
+      color: var(--danger-color);
+    }
+    
+    .badge-pending {
+      background-color: rgba(255, 209, 102, 0.15);
+      color: #b38c00;
     }
 
-  .table thead {
-      background: linear-gradient(135deg, #28a745, #20c997);
-      color: #fff;
+    .btn-action {
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition);
     }
-    .table td, .table th { vertical-align: middle; }
+    
+    .btn-edit {
+      background-color: rgba(255, 209, 102, 0.15);
+      color: #b38c00;
+      border: 1px solid rgba(255, 209, 102, 0.3);
+    }
+    
+    .btn-edit:hover {
+      background-color: var(--warning-color);
+      color: white;
+      border-color: var(--warning-color);
+    }
+    
+    .btn-delete {
+      background-color: rgba(239, 71, 111, 0.15);
+      color: var(--danger-color);
+      border: 1px solid rgba(239, 71, 111, 0.3);
+    }
+    
+    .btn-delete:hover {
+      background-color: var(--danger-color);
+      color: white;
+      border-color: var(--danger-color);
+    }
+    
+    .btn-status {
+      background-color: rgba(58, 134, 255, 0.15);
+      color: var(--primary-color);
+      border: 1px solid rgba(58, 134, 255, 0.3);
+    }
+    
+    .btn-status:hover {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .dropdown-menu {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem;
+    }
+    
+    .dropdown-item {
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(58, 134, 255, 0.1);
+    }
+
+    .modal-content {
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    .modal-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .modal-footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 1.25rem 1.5rem;
+    }
 
     footer {
-      background-color: #343a40;
+      background-color: var(--dark-color);
       color: #fff;
       padding: 1.5rem 0;
       margin-top: auto;
     }
 
-    .section-divider {
-      margin: 40px 0 20px;
-      padding-bottom: 5px;
-      border-bottom: 2px solid #28a745;
-      display: inline-block;
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--gray-color);
+    }
+    
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 60px;
+      }
+      
+      .sidebar:hover {
+        width: 220px;
+      }
+      
+      .content {
+        margin-left: 60px;
+        padding: 1.5rem 1rem;
+      }
+      
+      .sidebar:hover ~ .content {
+        margin-left: 220px;
+      }
+      
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .table-responsive {
+        font-size: 0.9rem;
+      }
+      
+      .btn-action {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .sidebar {
+        display: none;
+      }
+      
+      .content {
+        margin-left: 0;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1100;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Mobile Menu Button (aparece apenas em telas pequenas) -->
+  <button class="mobile-menu-btn d-lg-none">
+    <i class="fas fa-bars"></i>
+  </button>
+
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-header text-center mb-3 fw-bold">Restaurante Sky Lounge</div>
-    <a href="{% url 'lista_reservas' %}" class="active"><i class="fas fa-list"></i> Lista de Reservas</a>
-    <a href="{% url 'fazer_reserva_admin' %}"><i class="fas fa-plus-circle"></i> Cadastrar Reserva</a>
-    <a href="{% url 'locacao_mesas' %}"><i class="fas fa-chair"></i> Locação de Mesas</a>
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <div class="sidebar-header">
+      <i class="fas fa-utensils"></i>
+      <span>Sky Lounge</span>
+    </div>
+    <a href="{% url 'lista_reservas' %}" class="active">
+      <i class="fas fa-list"></i> 
+      <span>Lista de Reservas</span>
+    </a>
+    <a href="{% url 'fazer_reserva_admin' %}">
+      <i class="fas fa-plus-circle"></i> 
+      <span>Cadastrar Reserva</span>
+    </a>
+    <a href="{% url 'locacao_mesas' %}">
+      <i class="fas fa-chair"></i> 
+      <span>Locação de Mesas</span>
+    </a>
+    <a href="{% url 'logout' %}">
+      <i class="fas fa-sign-out-alt"></i> 
+      <span>Logout</span>
+    </a>
   </div>
 
   <!-- Conteúdo -->
   <div class="content"> 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Lista de Reservas</h1>
-      <a href="{% url 'logout' %}" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    <div class="page-header">
+      <h1 class="page-title">Lista de Reservas</h1>
+      <a href="{% url 'logout' %}" class="btn btn-logout">
+        <i class="fas fa-sign-out-alt me-1"></i> Sair
+      </a>
     </div>
 
     <!-- Reservas Futuras -->
-    <h2 class="section-divider">Reservas Futuras</h2>
-    <table class="table table-striped table-hover shadow-sm">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Data</th>
-          <th>Hora</th>
-          <th>Quantidade de Pessoas</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for reserva in reservas_futuras %}
-        <tr>
-          <td>{{ reserva.nome }}</td>
-          <td>{{ reserva.data|date:"d/m/Y" }}</td>
-          <td>{{ reserva.hora|time:"H:i" }}</td>
-          <td>{{ reserva.quantidade_pessoas }}</td>
-          <td>
-            {% if reserva.status == "Confirmada" %}
-              <span class="badge bg-success">{{ reserva.status }}</span>
-            {% elif reserva.status == "Cancelada" %}
-              <span class="badge bg-secondary">{{ reserva.status }}</span>
-            {% else %}
-              <span class="badge bg-warning text-dark">{{ reserva.status }}</span>
-            {% endif %}
-          </td>
-          <td>
-            <a href="{% url 'editar_reserva' reserva.id %}" class="btn btn-warning btn-sm me-1">
-              <i class="fas fa-edit"></i> Editar
-            </a>
-
-            <!-- Botão de exclusão -->
-            <button type="button" class="btn btn-danger btn-sm me-1" data-bs-toggle="modal"
-              data-bs-target="#deleteModal{{ reserva.id }}">
-              <i class="fas fa-trash-alt"></i> Excluir
-            </button>
-
-            <!-- Modal de exclusão -->
-            <div class="modal fade" id="deleteModal{{ reserva.id }}" tabindex="-1">
-              <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                  <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-calendar-alt"></i> Reservas Futuras
+        </h2>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Quantidade de Pessoas</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reserva in reservas_futuras %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-2">
+                      <span class="initials">{{ reserva.nome|slice:":1"|upper }}</span>
+                    </div>
+                    {{ reserva.nome }}
                   </div>
-                  <div class="modal-body">
-                    Deseja realmente excluir a reserva de <strong>{{ reserva.nome }}</strong>?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form method="POST" action="{% url 'deletar_reserva' reserva.id %}">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">Excluir</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </td>
+                <td>{{ reserva.data|date:"d/m/Y" }}</td>
+                <td>{{ reserva.hora|time:"H:i" }}</td>
+                <td>
+                  <span class="badge bg-light text-dark">{{ reserva.quantidade_pessoas }} pessoa{{ reserva.quantidade_pessoas|pluralize }}</span>
+                </td>
+                <td>
+                  {% if reserva.status == "Confirmada" %}
+                    <span class="badge badge-confirmed">{{ reserva.status }}</span>
+                  {% elif reserva.status == "Cancelada" %}
+                    <span class="badge badge-cancelled">{{ reserva.status }}</span>
+                  {% else %}
+                    <span class="badge badge-pending">{{ reserva.status }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'editar_reserva' reserva.id %}" class="btn btn-edit btn-action">
+                      <i class="fas fa-edit"></i>
+                    </a>
 
-            <!-- Alterar Status -->
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="fas fa-exchange-alt"></i> Alterar
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Confirmada' %}">
-                  ✅ Confirmar</a></li>
-                <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Cancelada' %}">
-                  ❌ Cancelar</a></li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5" class="text-center text-muted">Nenhuma reserva futura encontrada.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+                    <button type="button" class="btn btn-delete btn-action" data-bs-toggle="modal"
+                      data-bs-target="#deleteModal{{ reserva.id }}">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+
+                    <!-- Alterar Status -->
+                    <div class="dropdown">
+                      <button class="btn btn-status btn-action dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-exchange-alt"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Confirmada' %}">
+                          <i class="fas fa-check text-success me-2"></i>Confirmar</a></li>
+                        <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Cancelada' %}">
+                          <i class="fas fa-times text-danger me-2"></i>Cancelar</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Modal de exclusão -->
+                  <div class="modal fade" id="deleteModal{{ reserva.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão
+                          </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Deseja realmente excluir a reserva de <strong>{{ reserva.nome }}</strong>?</p>
+                          <p class="text-muted small">Esta ação não pode ser desfeita.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <form method="POST" action="{% url 'deletar_reserva' reserva.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Excluir Reserva</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h5>Nenhuma reserva futura encontrada</h5>
+                    <p class="text-muted">Todas as reservas futuras aparecerão aqui</p>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
     <!-- Reservas Passadas -->
-<h2 class="section-divider">Reservas Passadas</h2>
-<table class="table table-striped table-hover shadow-sm">
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Data</th>
-      <th>Hora</th>
-      <th>Status</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for reserva in reservas_passadas %}
-    <tr class="table-light">
-      <td>{{ reserva.nome }}</td>
-      <td>{{ reserva.data|date:"d/m/Y" }}</td>
-      <td>{{ reserva.hora|time:"H:i" }}</td>
-      <td>
-        {% if reserva.status == "Confirmada" %}
-          <span class="badge bg-success">{{ reserva.status }}</span>
-        {% elif reserva.status == "Cancelada" %}
-          <span class="badge bg-secondary">{{ reserva.status }}</span>
-        {% else %}
-          <span class="badge bg-warning text-dark">{{ reserva.status }}</span>
-        {% endif %}
-      </td>
-      <td>
-        <!-- Botão editar -->
-        <a href="{% url 'editar_reserva' reserva.id %}" class="btn btn-warning btn-sm me-1">
-          <i class="fas fa-edit"></i> Editar
-        </a>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-history"></i> Reservas Passadas
+        </h2>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reserva in reservas_passadas %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-2">
+                      <span class="initials">{{ reserva.nome|slice:":1"|upper }}</span>
+                    </div>
+                    {{ reserva.nome }}
+                  </div>
+                </td>
+                <td>{{ reserva.data|date:"d/m/Y" }}</td>
+                <td>{{ reserva.hora|time:"H:i" }}</td>
+                <td>
+                  {% if reserva.status == "Confirmada" %}
+                    <span class="badge badge-confirmed">{{ reserva.status }}</span>
+                  {% elif reserva.status == "Cancelada" %}
+                    <span class="badge badge-cancelled">{{ reserva.status }}</span>
+                  {% else %}
+                    <span class="badge badge-pending">{{ reserva.status }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'editar_reserva' reserva.id %}" class="btn btn-edit btn-action">
+                      <i class="fas fa-edit"></i>
+                    </a>
 
-        <!-- Botão excluir -->
-        <button type="button" class="btn btn-danger btn-sm me-1" data-bs-toggle="modal"
-          data-bs-target="#deleteModalPast{{ reserva.id }}">
-          <i class="fas fa-trash-alt"></i> Excluir
-        </button>
+                    <button type="button" class="btn btn-delete btn-action" data-bs-toggle="modal"
+                      data-bs-target="#deleteModalPast{{ reserva.id }}">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
 
-        <!-- Modal de exclusão -->
-        <div class="modal fade" id="deleteModalPast{{ reserva.id }}" tabindex="-1">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">
-                  <i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                Deseja realmente excluir a reserva de <strong>{{ reserva.nome }}</strong>?
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form method="POST" action="{% url 'deletar_reserva' reserva.id %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger">Excluir</button>
-                </form>
-              </div>
-            </div>
-          </div>
+                    <!-- Alterar Status -->
+                    <div class="dropdown">
+                      <button class="btn btn-status btn-action dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-exchange-alt"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Confirmada' %}">
+                          <i class="fas fa-check text-success me-2"></i>Confirmar</a></li>
+                        <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Cancelada' %}">
+                          <i class="fas fa-times text-danger me-2"></i>Cancelar</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Modal de exclusão -->
+                  <div class="modal fade" id="deleteModalPast{{ reserva.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão
+                          </h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Deseja realmente excluir a reserva de <strong>{{ reserva.nome }}</strong>?</p>
+                          <p class="text-muted small">Esta ação não pode ser desfeita.</p>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <form method="POST" action="{% url 'deletar_reserva' reserva.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Excluir Reserva</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center">
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h5>Nenhuma reserva passada encontrada</h5>
+                    <p class="text-muted">Todas as reservas passadas aparecerão aqui</p>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
-
-        <!-- Alterar Status -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fas fa-exchange-alt"></i> Alterar
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Confirmada' %}">
-              ✅ Confirmar</a></li>
-            <li><a class="dropdown-item" href="{% url 'alterar_status' reserva.id 'Cancelada' %}">
-              ❌ Cancelar</a></li>
-          </ul>
-        </div>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="5" class="text-center text-muted">Nenhuma reserva passada encontrada.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
- 
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -280,5 +668,54 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Adicionar estilos para os avatares circulares
+    document.head.insertAdjacentHTML('beforeend', `
+      <style>
+        .avatar-circle {
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+        
+        .mobile-menu-btn {
+          display: none;
+        }
+        
+        @media (max-width: 576px) {
+          .mobile-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          
+          .sidebar.mobile-open {
+            left: 0;
+            width: 240px;
+          }
+        }
+      </style>
+    `);
+    
+    // Toggle do menu mobile
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const sidebar = document.querySelector('.sidebar');
+      
+      if (mobileMenuBtn && sidebar) {
+        mobileMenuBtn.addEventListener('click', function() {
+          sidebar.classList.toggle('mobile-open');
+        });
+      }
+    });
+  </script>
 </body> 
-</html>
+</html> 

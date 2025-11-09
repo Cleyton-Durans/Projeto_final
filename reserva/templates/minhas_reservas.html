@@ -7,7 +7,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Minhas Reservas - Restaurante Sky Lounge</title>
-
+  <meta author="Cleyton Durans"/>
+  
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -27,75 +28,133 @@
 
   <style>
     body {
-      background: linear-gradient(135deg, #e8f5e9, #ffffff);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content {
+      flex: 1;
+      padding-bottom: 100px; /* Espaço para o footer */
     }
 
     .card {
       border: none;
       border-radius: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
     }
 
     .card-header {
       border-radius: 16px 16px 0 0 !important;
+      background: linear-gradient(135deg, #e76b49, #d45a38);
     }
 
     h1 {
       font-weight: 600;
-      color: #2e7d32;
+      color: #2c3e50;
     }
 
     .form-label {
       font-weight: 500;
-      color: #333;
+      color: #2c3e50;
     }
 
     .form-control {
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
       transition: 0.3s;
+      border: 2px solid #e9ecef;
     }
 
     .form-control:focus {
-      border-color: #2e7d32;
-      box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+      border-color: #e76b49;
+      box-shadow: 0 0 0 0.2rem rgba(231, 107, 73, 0.25);
     }
 
     .btn-success {
       border-radius: 10px;
-      padding: 10px 25px;
+      padding: 12px 30px;
       font-weight: 600;
       transition: 0.3s;
+      background: linear-gradient(135deg, #e76b49, #d45a38);
+      border: none;
     }
 
     .btn-success:hover {
-      background-color: #256d27;
+      background: linear-gradient(135deg, #d45a38, #c1492a);
+      transform: translateY(-2px);
+    }
+
+    .btn-home {
+      background: linear-gradient(135deg, #e76b49, #d45a38);
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(231, 107, 73, 0.3);
+      transition: 0.3s;
+    }
+
+    .btn-home:hover {
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 6px 20px rgba(231, 107, 73, 0.4);
     }
 
     .badge {
       font-size: 0.9rem;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 8px;
     }
 
+    .badge.bg-success {
+      background: linear-gradient(135deg, #06d6a0, #05c191) !important;
+    }
+
+    .badge.bg-warning {
+      background: linear-gradient(135deg, #ffd166, #ffc847) !important;
+    }
+
+    .badge.bg-secondary {
+      background: linear-gradient(135deg, #6c757d, #5a6268) !important;
+    }
+
+    .badge.bg-danger {
+      background: linear-gradient(135deg, #ef476f, #e8355f) !important;
+    }
+
     footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      z-index: 1050;
-      margin-top: 60px;
+      background-color: #1a1a2e;
+      color: #fff;
       padding: 20px 0;
-      background-color: #212529;
-      color: #bbb;
+      margin-top: auto; /* Isso faz o footer ficar no final */
+      width: 100%;
     }
 
     footer a {
-      color: #81c784;
+      color: #e76b49;
       text-decoration: none;
+      transition: 0.3s;
     }
 
     footer a:hover {
-      color: #a5d6a7;
+      color: #ff8c6b;
+    }
+
+    .table-success {
+      background: linear-gradient(135deg, #e76b49, #d45a38) !important;
+    }
+
+    .alert-info {
+      background: rgba(23, 162, 184, 0.1);
+      border: none;
+      border-left: 4px solid #17a2b8;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -104,102 +163,107 @@
 
   <!-- Botão fixo no canto superior direito para Voltar ao Início -->
   <div style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
-    <a href="{% url 'fazer_reserva' %}" class="btn btn-success btn-lg" data-bs-toggle="tooltip"
-      title="Voltar ao Início">
-      <i class="fa-solid fa-house"></i>
+    <a href="{% url 'fazer_reserva' %}" class="btn btn-home" data-bs-toggle="tooltip" title="Voltar ao Início">
+      <i class="fa-solid fa-house text-white"></i>
     </a>
   </div>
 
-  <!-- Resto do seu conteúdo -->
-  <div class="container mt-5 mb-5" data-aos="fade-up">
-    <h1 class="text-center mb-4"><i class="fa-solid fa-calendar-check me-2"></i>Consultar Reserva</h1>
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <div class="container mt-5 mb-5" data-aos="fade-up">
+      <h1 class="text-center mb-4 text-white"><i class="fa-solid fa-calendar-check me-2"></i>Consultar Reserva</h1>
 
-    <!-- Formulário de busca -->
-    <div class="card shadow-sm p-4 mb-4">
-      <form method="POST">
-        {% csrf_token %}
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label">Nome</label>
-            <input type="text" name="nome" class="form-control" placeholder="Digite seu nome completo" required>
+      <!-- Formulário de busca -->
+      <div class="card shadow-lg p-4 mb-4">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-user me-2"></i>Nome</label>
+              <input type="text" name="nome" class="form-control" placeholder="Digite seu nome completo" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label"><i class="fa-solid fa-envelope me-2"></i>E-mail</label>
+              <input type="email" name="email" class="form-control" placeholder="Digite seu e-mail" required>
+            </div>
           </div>
-          <div class="col-md-6">
-            <label class="form-label">E-mail</label>
-            <input type="email" name="email" class="form-control" placeholder="Digite seu e-mail" required>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success shadow">
+              <i class="fa-solid fa-magnifying-glass me-2"></i>Consultar Reservas
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Resultado da busca -->
+      {% if reservas %}
+      <div class="card shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <div class="card-header text-white">
+          <h5 class="mb-0"><i class="fa-solid fa-clipboard-list me-2"></i>Suas Reservas</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-success text-center text-white">
+                <tr>
+                  <th><i class="fa-solid fa-user me-2"></i>Nome</th>
+                  <th><i class="fa-solid fa-calendar me-2"></i>Data</th>
+                  <th><i class="fa-solid fa-clock me-2"></i>Hora</th>
+                  <th><i class="fa-solid fa-users me-2"></i>Pessoas</th>
+                  <th><i class="fa-solid fa-circle-info me-2"></i>Status</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">
+                {% for reserva in reservas %}
+                <tr>
+                  <td class="fw-semibold">{{ reserva.nome }}</td>
+                  <td>{{ reserva.data|date:"d/m/Y" }}</td>
+                  <td>{{ reserva.hora|date:"H:i" }}</td>
+                  <td>{{ reserva.quantidade_pessoas }}</td>
+                  <td>
+                    {% if reserva.status == "Confirmada" %}
+                    <span class="badge bg-success">
+                      <i class="fa-solid fa-circle-check me-1"></i>{{ reserva.status }}
+                    </span>
+                    {% elif reserva.status == "Cancelada" %}
+                    <span class="badge bg-secondary">
+                      <i class="fa-solid fa-ban me-1"></i>{{ reserva.status }}
+                    </span>
+                    {% elif reserva.status == "Pendente" %}
+                    <span class="badge bg-warning text-dark">
+                      <i class="fa-solid fa-hourglass-half me-1"></i>{{ reserva.status }}
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger">
+                      <i class="fa-solid fa-clock me-1"></i>Aguardando Aprovação
+                    </span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
-
-        <div class="text-center mt-4">
-          <button type="submit" class="btn btn-success shadow-sm">
-            <i class="fa-solid fa-magnifying-glass me-2"></i>Consultar
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Resultado da busca -->
-    {% if reservas %}
-    <div class="card shadow-sm" data-aos="fade-up" data-aos-delay="200">
-      <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="fa-solid fa-clipboard-list me-2"></i> Reservas filtradas</h5>
       </div>
-      <div class="card-body">
-        <table class="table table-hover align-middle">
-          <thead class="table-success text-center">
-            <tr>
-              <th>Nome</th>
-              <th>Data</th>
-              <th>Hora</th>
-              <th>Quantidade de Pessoas</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody class="text-center">
-            {% for reserva in reservas %}
-            <tr>
-              <td>{{ reserva.nome }}</td>
-              <td>{{ reserva.data|date:"d/m/Y" }}</td>
-              <td>{{ reserva.hora|date:"H:i" }}</td>
-              <td>{{ reserva.quantidade_pessoas }}</td>
-              <td>
-                {% if reserva.status == "Confirmada" %}
-                <span class="badge bg-success">
-                  <i class="fa-solid fa-circle-check me-1"></i>{{ reserva.status }}
-                </span>
-                {% elif reserva.status == "Cancelada" %}
-                <span class="badge bg-secondary">
-                  <i class="fa-solid fa-ban me-1"></i>{{ reserva.status }}
-                </span>
-                {% elif reserva.status == "Pendente" %}
-                <span class="badge bg-warning text-dark">
-                  <i class="fa-solid fa-hourglass-half me-1"></i>{{ reserva.status }}
-                </span>
-                {% else %}
-                <span class="badge bg-danger">
-                  <i class="fa-solid fa-circle-xmark me-1"></i> Aguardando Aprovação
-                </span>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    {% endif %}
+      {% endif %}
 
-    <!-- Mensagens -->
-    {% for message in messages %}
-    <div class="alert alert-info mt-4 text-center" data-aos="fade-in">{{ message }}</div>
-    {% endfor %}
+      <!-- Mensagens -->
+      {% for message in messages %}
+      <div class="alert alert-info mt-4 text-center" data-aos="fade-in">
+        <i class="fa-solid fa-info-circle me-2"></i>{{ message }}
+      </div>
+      {% endfor %}
+    </div>
   </div>
 
   <!-- Footer -->
   <footer class="text-center">
     <p class="mb-0">
-      &copy; {% now "Y" %} Restaurante Sky Lounge — Feito com <i class="fa-solid fa-heart text-danger"></i>
+      &copy; {% now "Y" %} Restaurante Sky Lounge — Feito com <i class="fa-solid fa-heart" style="color: #e76b49;"></i>
       <br>
-      <a href="{% url 'fazer_reserva' %}">Voltar ao Início</a>
+      <a href="{% url 'fazer_reserva' %}"><i class="fa-solid fa-arrow-left me-1"></i>Voltar ao Início</a>
     </p>
   </footer>
 

@@ -1,169 +1,547 @@
 {% load static %}
 {% load widget_tweaks %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Editar Reserva</title>
+  <title>Editar Reserva - Sky Lounge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta author="Cleyton Durans"/>
   
-  <!-- <head> animation -->
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- CSS Libraries -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Font Awesome CSS para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-  <!-- fontes -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
 
-  <!-- Scripts -->
-  <!-- Bootstrap Bundle JS (inclui o JavaScript necessário) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <link rel="stylesheet" href="{% static 'js/javascripts.js' %}">
-  <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
   <style>
+    :root {
+      --primary: #e76b49;
+      --primary-dark: #d45a38;
+      --secondary: #2c3e50;
+      --accent: #f39c12;
+      --light: #f8f9fa;
+      --dark: #1a1a2e;
+      --text: #333333;
+      --text-light: #6c757d;
+      --border-radius: 16px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #f4f6f9;
-      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('{% static "img/pattern.png" %}') repeat;
+      opacity: 0.05;
+      z-index: -1;
+    }
+
+    .container-wrapper {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .card {
-      max-width: 700px;
-      margin: 60px auto;
-      padding: 40px 35px;
-      border-radius: 15px;
-      background-color: #ffffff;
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
+      border: none;
+      border-radius: var(--border-radius);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+      transition: var(--transition);
     }
 
     .card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
 
-    h2 {
+    .card-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem;
       text-align: center;
-      margin-bottom: 35px;
-      color: #212529;
-      font-weight: 700;
+      border-bottom: none;
     }
 
-    label {
+    .card-header h2 {
+      font-family: 'Playfair Display', serif;
       font-weight: 600;
-      color: #495057;
+      margin: 0;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
     }
 
-    .form-control {
-      border-radius: 8px;
-      padding: 10px 14px;
-      border: 1px solid #ced4da;
-      box-shadow: none;
-      transition: all 0.3s;
+    .card-body {
+      padding: 2.5rem;
     }
 
-    .form-control:focus {
-      border-color: #198754;
-      box-shadow: 0 0 6px rgba(25, 135, 84, 0.2);
+    .form-label {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .btn-success {
-      background-color: #198754;
+    .form-control, .form-select {
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e9ecef;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      background: #fff;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.25rem rgba(231, 107, 73, 0.15);
+      background: #fff;
+    }
+
+    .input-group-text {
+      background: var(--primary);
+      border: 2px solid var(--primary);
+      color: white;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .form-control:focus + .input-group-text {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      border-radius: 10px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: var(--transition);
       border: none;
-      font-weight: 600;
-      transition: background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .btn-success:hover {
-      background-color: #157347;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 4px 15px rgba(231, 107, 73, 0.3);
     }
 
-    .btn-secondary {
-      background-color: #6c757d;
-      border: none;
-      font-weight: 600;
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231, 107, 73, 0.4);
     }
 
-    .btn-secondary:hover {
-      background-color: #5a6268;
+    .btn-outline-secondary {
+      border: 2px solid #6c757d;
+      color: #6c757d;
+      background: transparent;
+    }
+
+    .btn-outline-secondary:hover {
+      background: #6c757d;
+      color: white;
+      transform: translateY(-2px);
     }
 
     .alert {
-      border-radius: 8px;
+      border-radius: 10px;
+      border: none;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alert-success {
+      background: rgba(25, 135, 84, 0.1);
+      color: #198754;
+      border-left: 4px solid #198754;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .form-section-title {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .floating-label {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .floating-label .form-control {
+      padding-top: 1.5rem;
+    }
+
+    .floating-label label {
+      position: absolute;
+      top: 0.5rem;
+      left: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      transition: var(--transition);
+      pointer-events: none;
+    }
+
+    .floating-label .form-control:focus + label,
+    .floating-label .form-control:not(:placeholder-shown) + label {
+      top: 0.2rem;
+      font-size: 0.7rem;
+      color: var(--primary);
+    }
+
+    .reservation-preview {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .reservation-preview h5 {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .reservation-preview p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .card-body {
+        padding: 1.5rem;
+      }
+      
+      .card-header {
+        padding: 1.5rem;
+      }
+      
+      .card-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Custom Checkbox */
+    .form-check-input:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Loading State */
+    .btn-loading {
+      position: relative;
+      color: transparent;
+    }
+
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      margin-left: -10px;
+      margin-top: -10px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-right-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 
 <body>
-  <div class="card shadow">
-    <h2><i class="fas fa-pen-to-square me-2"></i>Editar Reserva</h2>
-
-    <form method="POST" novalidate>
-      {% csrf_token %}
-
-      <!-- Nome -->
-      <div class="mb-3">
-        <label for="id_nome" class="form-label">Nome Completo</label>
-        {% render_field form.nome class="form-control" placeholder="Digite seu nome completo" %}
+  <div class="container-wrapper">
+    <div class="card" data-aos="fade-up" data-aos-duration="800">
+      <!-- Header -->
+      <div class="card-header">
+        <h2>
+          <i class="fas fa-edit"></i>
+          Editar Reserva
+        </h2>
+        <p class="mt-2 mb-0 opacity-75">Atualize os detalhes da sua reserva no Sky Lounge</p>
       </div>
 
-      <!-- Email -->
-      <div class="mb-3">
-        <label for="id_email" class="form-label">Email</label>
-        {% render_field form.email class="form-control" placeholder="exemplo@email.com" %}
-      </div>
-
-      <!-- Telefone -->
-      <div class="mb-3">
-        <label for="id_telefone" class="form-label">Telefone</label>
-        {% render_field form.telefone class="form-control" placeholder="(00) 00000-0000" %}
-      </div>
-
-      <!-- Data e Hora lado a lado -->
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="id_data" class="form-label">Data da Reserva</label>
-          {% render_field form.data class="form-control" %}
+      <!-- Body -->
+      <div class="card-body">
+        <!-- Reservation Preview -->
+        <div class="reservation-preview">
+          <h5><i class="fas fa-calendar-check me-2"></i>Reserva Atual</h5>
+          <p>Verifique e atualize as informações abaixo</p>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="id_hora" class="form-label">Hora da Reserva</label>
-          {% render_field form.hora class="form-control" %}
-        </div>
-      </div>
+        <form method="POST" novalidate id="reservationForm">
+          {% csrf_token %}
 
-      <!-- Quantidade -->
-      <div class="mb-3">
-        <label for="id_quantidade_pessoas" class="form-label">Número de Pessoas</label>
-        {% render_field form.quantidade_pessoas class="form-control" min="1" %}
-      </div>
+          <!-- Informações Pessoais -->
+          <div class="form-section">
+            <h5 class="form-section-title">
+              <i class="fas fa-user-circle"></i>
+              Informações Pessoais
+            </h5>
+            
+            <div class="row g-3">
+              <!-- Nome -->
+              <div class="col-md-6">
+                <div class="floating-label">
+                  {% render_field form.nome class="form-control" placeholder=" " %}
+                  <label for="id_nome"><i class="fas fa-user me-1"></i>Nome Completo</label>
+                </div>
+              </div>
 
-      <!-- Botões -->
-      <div class="d-flex justify-content-between mt-4">
-        <button type="submit" class="btn btn-success px-4">
-          <i class="fas fa-save me-2"></i>Salvar Alterações
-        </button>
-        <a href="{% url 'lista_reservas' %}" class="btn btn-secondary px-4">
-          <i class="fas fa-arrow-left me-2"></i>Voltar
-        </a>
-      </div>
-    </form>
+              <!-- Email -->
+              <div class="col-md-6">
+                <div class="floating-label">
+                  {% render_field form.email class="form-control" placeholder=" " %}
+                  <label for="id_email"><i class="fas fa-envelope me-1"></i>Email</label>
+                </div>
+              </div>
 
-    {% if messages %}
-    <div class="mt-4">
-      {% for message in messages %}
-      <div class="alert alert-success">{{ message }}</div>
-      {% endfor %}
-    </div>
-    {% endif %}
+              <!-- Telefone -->
+              <div class="col-12">
+                <div class="floating-label">
+                  {% render_field form.telefone class="form-control" placeholder=" " %}
+                  <label for="id_telefone"><i class="fas fa-phone me-1"></i>Telefone</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalhes da Reserva -->
+          <div class="form-section">
+            <h5 class="form-section-title">
+              <i class="fas fa-calendar-alt"></i>
+              Detalhes da Reserva
+            </h5>
+            
+            <div class="row g-3">
+              <!-- Data -->
+              <div class="col-md-6">
+                <div class="floating-label">
+                  {% render_field form.data class="form-control" placeholder=" " %}
+                  <label for="id_data"><i class="fas fa-calendar me-1"></i>Data da Reserva</label>
+                </div>
+              </div>
+
+              <!-- Hora -->
+              <div class="col-md-6">
+                <div class="floating-label">
+                  {% render_field form.hora class="form-control" placeholder=" " %}
+                  <label for="id_hora"><i class="fas fa-clock me-1"></i>Hora da Reserva</label>
+                </div>
+              </div>
+
+              <!-- Quantidade de Pessoas -->
+              <div class="col-12">
+                <div class="floating-label">
+                  {% render_field form.quantidade_pessoas class="form-control" placeholder=" " min="1" %}
+                  <label for="id_quantidade_pessoas"><i class="fas fa-users me-1"></i>Número de Pessoas</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Observações (se houver no formulário) -->
+          {% if form.observacoes %}
+          <div class="form-section">
+            <h5 class="form-section-title">
+              <i class="fas fa-sticky-note"></i>
+              Observações Adicionais
+            </h5>
+            <div class="floating-label">
+              {% render_field form.observacoes class="form-control" placeholder=" " rows="3" %}
+              <label for="id_observacoes"><i class="fas fa-edit me-1"></i>Observações</label>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Mensagens -->
+          {% if messages %}
+          <div class="mt-4">
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <i class="fas fa-check-circle"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Botões -->
+          <div class="d-flex gap-3 mt-4 button-group">
+            <button type="submit" class="btn btn-primary flex-fill" id="submitBtn">
+              <i class="fas fa-save me-2"></i>Salvar Alterações
+            </button>
+            <a href="{% url 'lista_reservas' %}" class="btn btn-outline-secondary flex-fill">
+              <i class="fas fa-arrow-left me-2"></i>Voltar para Lista
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>  
   </div>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  
+  <script>
+    // Inicializar AOS
+    AOS.init({
+      duration: 800,
+      once: true
+    });
+
+    // Loading state no botão de submit
+    document.getElementById('reservationForm').addEventListener('submit', function() {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.classList.add('btn-loading');
+      submitBtn.disabled = true;
+    });
+
+    // Máscara para telefone
+    const phoneField = document.getElementById('id_telefone');
+    if (phoneField) {
+      phoneField.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.substring(0, 11);
+        
+        if (value.length > 10) {
+          value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        } else if (value.length > 6) {
+          value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+        } else if (value.length > 2) {
+          value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+        } else if (value.length > 0) {
+          value = value.replace(/^(\d{0,2})/, '($1');
+        }
+        
+        e.target.value = value;
+      });
+    }
+
+    // Validação em tempo real
+    const formFields = document.querySelectorAll('.form-control');
+    formFields.forEach(field => {
+      field.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+          this.classList.add('is-invalid');
+        } else {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        }
+      });
+
+      field.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+          this.classList.remove('is-invalid');
+          this.classList.add('is-valid');
+        }
+      });
+    });
+
+    // Preview dinâmico da reserva
+    function updateReservationPreview() {
+      const nome = document.getElementById('id_nome').value || '[Seu Nome]';
+      const data = document.getElementById('id_data').value || '[Data]';
+      const hora = document.getElementById('id_hora').value || '[Hora]';
+      const pessoas = document.getElementById('id_quantidade_pessoas').value || '[N]';
+      
+      const previewElement = document.querySelector('.reservation-preview p');
+      if (previewElement) {
+        previewElement.innerHTML = 
+          `<strong>${nome}</strong> - ${data} às ${hora} - ${pessoas} pessoa${pessoas != 1 ? 's' : ''}`;
+      }
+    }
+
+    // Atualizar preview quando os campos mudam
+    formFields.forEach(field => {
+      field.addEventListener('change', updateReservationPreview);
+      field.addEventListener('input', updateReservationPreview);
+    });
+
+    // Inicializar preview
+    document.addEventListener('DOMContentLoaded', updateReservationPreview);
+  </script>
 </body>
-</html>
+</html>''
