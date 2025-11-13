@@ -3,3 +3,15 @@ Django>=5.0
 django-widget-tweaks>=1.5
 whitenoise>=6.11.0
 gunicorn>=21.2.0
+
+
+#  Biblioteca para envio de e-mail  
+# django-allauth>
+
+# asgiref              3.10.0
+# Django               5.2.7
+# django-widget-tweaks 1.5.0
+# pip                  25.3
+# sqlparse             0.5.3
+# tzdata               2025.2
+# whitenoise           6.11.0
